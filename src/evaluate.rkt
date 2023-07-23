@@ -1,11 +1,25 @@
 #lang racket
 
-; sample S-expressions
-(define sexp "(+ 3 2)")
-(define sexp2 "(+ 5 (+ 3 2))")
+; convert string s-expression to code list
+; string->sexp :: string -> list
+(define (string->sexp string)
+    (read (open-input-string string)))
 
-; parse for everything within outermost parentheses
-(regexp-replace #rx"\\((.*)\\)" sexp2 "\\1")  ; "+ 5 (+ 3 2)"
+; sample s-expressions
+(define sexp (string->sexp "(+ 3 2)"))
+(define sexp2 (string->sexp "(+ 5 (+ 3 2))"))
+(define sexp3 (string->sexp "(/ (- (sqrt 5) 1) 2)"))
 
 
+; atom? :: object -> boolean
+(define (atom? obj)
+    (and (not (null? obj))
+         (not (pair? obj))))
 
+; evaluate s-expression
+; eval-sexp :: list -> any
+(define (eval-sexp sexp)
+    (cond ([(null? sexp) '()]
+           [])
+    )
+)
