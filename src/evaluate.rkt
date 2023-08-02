@@ -17,8 +17,8 @@
 
 
 ; evaluate s-expression
-; eval-sexp :: list -> any
-(define (eval-sexp sexp)
+; evaluate :: list -> any
+(define (evaluate sexp env)
     (cond ([(null? sexp) sexp]
            [(atom? sexp) TODO]  ; if atom then either known symbol, number, . . . OR ???
            [(pair? sexp) TODO]  ; if pair then go into another cond based on car
