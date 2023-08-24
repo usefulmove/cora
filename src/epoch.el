@@ -7,7 +7,7 @@
 ;; Created: August 23, 2023
 ;; Modified: August 23, 2023
 ;; Version: 0.0.1
-;; Keywords: functional programming algorithms library
+;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
 ;;
@@ -30,7 +30,7 @@
 
 
 ; curry2 :: (T -> U -> V) -> (T -> (U -> V))
-(defun curry2 (f)
+(defun curry2 (f) ; TODO - troubleshoot
   (lambda (a) (lambda (b) (funcall f a b))))
 
 (defun add (a b) (+ a b))
@@ -67,4 +67,3 @@
 
 (provide 'epic)
 ;;; epoch.el ends here
-;;;
