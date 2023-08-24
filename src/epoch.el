@@ -19,6 +19,11 @@
 ;;
 ;;; Code:
 
+
+(defun inc (n) (+ 1 n))
+(defun dec (n) (- n 1))
+
+
 ; map :: (T -> U) -> [T] -> [U]
 (defun map (f lst)
   (cond ((null lst) '()) ; end of list?
