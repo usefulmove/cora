@@ -1,4 +1,4 @@
-;;; epic.el --- functional programming algorithms library -*- lexical-binding: t; -*-
+;;; epic.el --- Functional programming algorithms library -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (c) 2023 Robert Duane Edmonds
 ;;
@@ -54,6 +54,22 @@
   "decrement number"
   (- n 1))
 
+;; even? :: number -> boolean
+(defun even? (n)
+  (= 0 (mod n 2)))
+
+;; odd? :: number -> boolean
+(defun odd? (n)
+  (= 1 (mod n 2)))
+
+;; zero? :: number -> boolean
+(defun zero? (n)
+  (= 0 n))
+
+;; sum :: [T] -> T
+(defun sum (lst)
+  (apply '+ lst))
+
 ;(defun all? (lst)
 ;  )
 
@@ -63,21 +79,11 @@
 ;(defun init (lst)
 ;  )
 
+(init '(3 1 2 5 4))
+
 ;(defun prod (lst)
-;  )
-
-;(defun sum (lst)
-;  )
-
-;(defun odd? (lst)
-;  )
-
-;(defun even? (lst)
-;  )
-
-;(defun zero? (lst)
 ;  )
 
 
 (provide 'epic)
-;;; epoch.el ends here
+;;; epic.el ends here
