@@ -5,7 +5,7 @@
 ;; Author: Duane <dedmonds@G3>
 ;; Maintainer: Duane <dedmonds@G3>
 ;; Created: August 23, 2023
-;; Modified: August 23, 2023
+;; Modified: August 24, 2023
 ;; Version: 0.0.1
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
@@ -15,60 +15,69 @@
 ;;
 ;;; Commentary:
 ;;
-;;  Description:  functional programming algorithms library
+;;  Description:  functional programming algorithms
 ;;
 ;;; Code:
 
 
-(defun inc (n) (+ 1 n))
-(defun dec (n) (- n 1))
-
-
-; map :: (T -> U) -> [T] -> [U]
+;; map :: (T -> U) -> [T] -> [U]
 (defun map (f lst)
+  "map function over elements of list"
   (cond ((null lst) '()) ; end of list?
         (t (cons (funcall f (car lst))
                  (map f (cdr lst))))))
 
-(defun cube (n) (* n n n))
-(map 'cube (list 8 1 2))
+;; fold ::
+;(defun fold (f acc lst)
+;  )
 
+;; filter :: (T -> boolean) -> [T]
+(defun filter (f lst)
+  (cond ((null lst) '())
+        ((not (funcall f (car lst))) (filter f (cdr lst)))
+        (t (cons (car lst)
+                 (filter f (cdr lst))))))
 
-; curry2 :: (T -> U -> V) -> (T -> (U -> V))
+;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
 (defun curry2 (f) ; TODO - troubleshoot
-  (lambda (a) (lambda (b) (funcall f a b))))
+  "return curried binary function"
+  (lambda (a)
+    (lambda (b) (funcall f a b))))
 
-(defun add (a b) (+ a b))
-(add 3 2)
+;; inc :: number -> number
+(defun inc (n)
+  "increment number"
+  (+ 1 n))
 
-(map (lambda (a) (add 3 a)) '(3 1 2))
-
-(setq curried-add (curry2 'add))
-
-(setq add3 (funcall curried-add 3))
-(funcall add3 2)
-
-(funcall (funcall curried-add 3) 2)
-
-
-(setq asdf 'map)
-(funcall asdf 'cube '(8 1 2))
-
+;; dec :: number -> number
+(defun dec (n)
+  "decrement number"
+  (- n 1))
 
 ;(defun all? (lst)
 ;  )
-;
+
 ;(defun any? (lst)
 ;  )
-;
+
 ;(defun init (lst)
 ;  )
-;
+
 ;(defun prod (lst)
 ;  )
-;
+
 ;(defun sum (lst)
 ;  )
+
+;(defun odd? (lst)
+;  )
+
+;(defun even? (lst)
+;  )
+
+;(defun zero? (lst)
+;  )
+
 
 (provide 'epic)
 ;;; epoch.el ends here
