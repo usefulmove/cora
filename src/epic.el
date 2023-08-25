@@ -46,6 +46,12 @@
   (lambda (a)
     (lambda (b) (funcall f a b))))
 
+;; range :: number -> [number]
+(defun range (n)
+  (cond ((= 0 n) '())
+        (t (append (range (- n 1))
+                   (list n)))))
+
 ;; inc :: number -> number
 (defun inc (n)
   "increment number"
