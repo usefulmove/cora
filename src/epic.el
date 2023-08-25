@@ -2,8 +2,8 @@
 ;;
 ;; Copyright (c) 2023 Robert Duane Edmonds
 ;;
-;; Author: Duane <dedmonds@G3>
-;; Maintainer: Duane <dedmonds@G3>
+;; Author: Duane <dedmonds@gmail.com>
+;; Maintainer: Duane <dedmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: August 24, 2023
 ;; Version: 0.0.1
@@ -27,9 +27,11 @@
         (t (cons (funcall f (car lst))
                  (map f (cdr lst))))))
 
-;; fold ::
-;(defun fold (f acc lst)
-;  )
+;; fold :: (T -> U -> T) -> [U] -> T
+(defun fold (f acc lst)
+  "fold (reduce) list"
+  (cond ((null lst) acc)
+        (t (fold f (funcall f acc (car lst)) (cdr lst)))))
 
 ;; filter :: (T -> boolean) -> [T]
 (defun filter (f lst)
@@ -70,19 +72,34 @@
 (defun sum (lst)
   (apply '+ lst))
 
-;(defun all? (lst)
-;  )
+;; prod :: [T] -> T
+(defun prod (lst)
+  (apply '* lst))
 
-;(defun any? (lst)
-;  )
+;; all? :: (T -> boolean) -> [T] -> boolean
+(defun all? (f lst)
+  "check that function applied to all values in the list returns true"
+  (cond ((null lst) t)
+        ((not (funcall f (car lst))) nil)
+        (t (all? f (cdr lst)))))
 
-;(defun init (lst)
-;  )
+;; any? :: (T -> boolean) -> [T] -> boolean
+(defun any? (f lst)
+  "check that function applied to at least one value in the list returns true"
+  (cond ((null lst) nil)
+        ((funcall f (car lst)) t)
+        (t (any? f (cdr lst)))))
 
-(init '(3 1 2 5 4))
+;; init :: [T] -> [T]
+(defun init (lst)
+  "return all elements of list except first"
+  (reverse (cdr (reverse lst))))
 
-;(defun prod (lst)
-;  )
+;; last :: [T] -> [T]
+(defun last (lst)
+  "return the last element of the list"
+  (car (reverse lst)))
+
 
 
 (provide 'epic)
