@@ -50,7 +50,7 @@
 (defun range (n)
   (cond ((= 0 n) '())
         (t (append (range (- n 1))
-                   (list n)))))
+                   (list (- n 1))))))
 
 ;; inc :: number -> number
 (defun inc (n)
