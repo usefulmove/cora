@@ -5,8 +5,8 @@
 ;; Author: Duane <dedmonds@gmail.com>
 ;; Maintainer: Duane <dedmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: August 26, 2023
-;; Version: 0.0.2
+;; Modified: August 27, 2023
+;; Version: 0.0.3
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
@@ -22,32 +22,56 @@
 
 ;; map :: (T -> U) -> [T] -> [U]
 (defun _map (f lst)
-  "map function over elements of list"
+  "Map function over elements of list and return updated list."
   (cond ((null lst) '()) ; end of list?
         (t (cons (funcall f (car lst))
                  (_map f (cdr lst))))))
 
- ; built-in as mapcar
 
-
-;; fold :: (T -> U -> T) -> [U] -> T
+;; fold :: (U -> T -> U) -> U -> [T] -> U
 (defun _fold (f acc lst)
-  "fold (reduce) list"
+  "Fold (reduce) list using applied function."
   (cond ((null lst) acc)
         (t (_fold f (funcall f acc (car lst)) (cdr lst)))))
 
 
-;; filter :: (T -> boolean) -> [T]
 (defun _filter (f lst)
+  "Filter list using applied function."
   (cond ((null lst) '())
         ((not (funcall f (car lst))) (_filter f (cdr lst)))
         (t (cons (car lst)
                  (_filter f (cdr lst))))))
 
 
+;; partial :: (... -> T -> U) -> [...] -> (T -> U)
+(defun _partial (&rest args)
+  "Return unary function when passed an n-ary function and (- n 1) arguments."
+  (let ((f (car args))
+        (fargs (cdr args)))
+    (lambda (a)
+      (apply f (append fargs (list a))))))
+
+
+;; thread :: T -> [(T -> T)] -> T
+(defun _thread (&rest args)
+  ;(message (concat (car args) (apply 'concat (cdr args)))))
+  (let ((seed (car args))
+        (fns (cdr args)))
+    (fold
+      (lambda (acc f)
+        (funcall f acc))
+      seed
+      fns)))
+;;
+;;(_thread 5
+;;  'sqrt
+;;  (lambda (n) (- n 1))
+;;  (lambda (n) (/ n 2)))
+
+
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
-(defun _curry2 (f) ; TODO - fixme
-  "return curried binary function"
+(defun _curry2 (f)
+  "Return curried binary function."
   (lambda (a)
     (lambda (b) (funcall f a b))))
 
