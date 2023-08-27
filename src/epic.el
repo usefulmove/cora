@@ -54,7 +54,9 @@
 
 ;; thread :: T -> [(T -> T)] -> T
 (defun _thread (&rest args)
-  ;(message (concat (car args) (apply 'concat (cdr args)))))
+  "Thread a seed value through the function defined by the composition of a
+  list of functions. This higher-order function can simplify (and make more
+  expressive) deeply nested compositional patterns."
   (let ((seed (car args))
         (fns (cdr args)))
     (fold
@@ -63,10 +65,10 @@
       seed
       fns)))
 ;;
-;;(_thread 5
-;;  'sqrt
-;;  (lambda (n) (- n 1))
-;;  (lambda (n) (/ n 2)))
+;;(_thread 8
+;;  '(lambda (n) (* n n n)) ; cube
+;;  'number-to-string
+;;  'message) ; => "512"
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
@@ -85,13 +87,13 @@
 
 ;; inc :: number -> number
 (defun _inc (n)
-  "increment number"
+  "Increment number."
   (+ 1 n))
 
 
 ;; dec :: number -> number
 (defun _dec (n)
-  "decrement number"
+  "Decrement number."
   (- n 1))
 
 
@@ -122,7 +124,7 @@
 
 ;; all? :: (T -> boolean) -> [T] -> boolean
 (defun _all? (f lst)
-  "check that function applied to all values in the list returns true"
+  "Check that function applied to all values in the list returns true."
   (cond ((null lst) t)
         ((not (funcall f (car lst))) nil)
         (t (_all? f (cdr lst)))))
@@ -130,7 +132,7 @@
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
 (defun _any? (f lst)
-  "check that function applied to at least one value in the list returns true"
+  "Check that function applied to at least one value in the list returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
         (t (_any? f (cdr lst)))))
@@ -138,25 +140,28 @@
 
 ;; init :: [T] -> [T]
 (defun _init (lst)
-  "return all elements of list except first"
+  "Return all elements of list except first."
   (reverse (cdr (reverse lst))))
 
 
 ;; last :: [T] -> [T]
 (defun _last (lst)
-  "return the last element of the list"
+  "Return the last element of the list."
   (car (reverse lst)))
 
 
 ; join-chars :: [char] -> string
 (defun _join-chars (chars)
+  "Join the elements of list of characters into a string."
   (apply 'string chars))
 
 
 (defun _insert-eval (sexp)
+  "Insert the result of evaluating SEXP into the buffer at location of
+  the current point."
   (insert (concat " ; => " (number-to-string (eval sexp)))))
-
-;(_insert-eval '(/ (- (sqrt 5) 1) 2)) ; => 0.6180339887498949
+;;
+;;(_insert-eval '(* 3 2)) ; => 6
 
 
 
