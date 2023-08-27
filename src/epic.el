@@ -129,6 +129,12 @@
   (apply 'string chars))
 
 
+(defun _insert-eval (sexp)
+  (insert (concat " ; => " (number-to-string (eval sexp)))))
+
+;(_insert-eval '(/ (- (sqrt 5) 1) 2)) ; => 0.6180339887498949
+
+
 
 (provide 'epic)
 ;;; epic.el ends here
