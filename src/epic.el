@@ -59,14 +59,14 @@
   expressive) deeply nested compositional patterns."
   (let ((seed (car args))
         (fns (cdr args)))
-    (fold
+    (_fold
       (lambda (acc f)
         (funcall f acc))
       seed
       fns)))
 ;;
 ;;(_thread 8
-;;  '(lambda (n) (* n n n)) ; cube
+;;  '(lambda (n) (* n n n)) ; cube (note - lambda does not have to be quoted)
 ;;  'number-to-string
 ;;  'message) ; => "512"
 
