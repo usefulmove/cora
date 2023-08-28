@@ -150,18 +150,18 @@
   (car (reverse lst)))
 
 
-; join-chars :: [char] -> string
+;; join-chars :: [char] -> string
 (defun _join-chars (chars)
   "Join the elements of list of characters into a string."
   (apply 'string chars))
 
 
-(defun _insert-eval (sexp)
-  "Insert the result of evaluating SEXP into the buffer at location of
-  the current point."
-  (insert (concat " ; => " (number-to-string (eval sexp)))))
-;;
-;;(_insert-eval '(* 3 2)) ; => 6
+;; gcd :: int -> int -> int
+(defun _gcd (a b)
+  "Calculate the greatest common divisor."
+  (cond ((= 0 b) a)
+        (t (_gcd b (mod a b)))))
+
 
 
 
