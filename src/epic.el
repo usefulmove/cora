@@ -5,8 +5,8 @@
 ;; Author: Duane <dedmonds@gmail.com>
 ;; Maintainer: Duane <dedmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: August 29, 2023
-;; Version: 0.0.5
+;; Modified: August 30, 2023
+;; Version: 0.0.6
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
@@ -70,19 +70,20 @@
 ;;  'message) ; => "512"
 
 
-;; pipe :: [(T -> T)] -> (T -> T)
-(defun _pipe (&rest fns)
-  "Create composed function constructed of function arguments. The order of
-  composition is the opposite of the compose function."
-  (lambda (seed)
-    (apply '_thread (cons seed
-                          fns))))
-
-
 ;; compose :: [(T -> T)] -> (T -> T)
 (defun _compose (&rest fns)
   "Create composed function constructed of function arguments."
-  (apply '_pipe (reverse fns)))
+  (cond ((null fns) 'identity)
+        (t (let ((last-f (car fns))
+                 (rest-f (apply '_compose (cdr fns))))
+             (lambda (seed)
+               (funcall last-f (funcall rest-f seed)))))))
+
+
+;; pipe :: [(T -> T)] -> (T -> T)
+(defun _pipe (&rest fns)
+  "Create composed function constructed of function arguments."
+  (apply '_compose (reverse fns)))
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
