@@ -82,7 +82,8 @@
 
 ;; pipe :: [(T -> T)] -> (T -> T)
 (defun _pipe (&rest fns)
-  "Create composed function constructed of function arguments."
+  "Create composed function constructed of function arguments. The order of
+  function application is reversed from the compose function."
   (apply '_compose (reverse fns)))
 
 
