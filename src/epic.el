@@ -6,7 +6,7 @@
 ;; Maintainer: Duane <dedmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: August 29, 2023
-;; Version: 0.0.4
+;; Version: 0.0.5
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
@@ -68,6 +68,21 @@
 ;;  '(lambda (n) (* n n n)) ; cube (note - lambda does not have to be quoted)
 ;;  'number-to-string
 ;;  'message) ; => "512"
+
+
+;; pipe :: [(T -> T)] -> (T -> T)
+(defun _pipe (&rest fns)
+  "Create composed function constructed of function arguments. The order of
+  composition is the opposite of the compose function."
+  (lambda (seed)
+    (apply '_thread (cons seed
+                          fns))))
+
+
+;; compose :: [(T -> T)] -> (T -> T)
+(defun _compose (&rest fns)
+  "Create composed function constructed of function arguments."
+  (apply '_pipe (reverse fns)))
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
