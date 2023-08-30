@@ -5,8 +5,8 @@
 ;; Author: Duane <dedmonds@gmail.com>
 ;; Maintainer: Duane <dedmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: August 27, 2023
-;; Version: 0.0.3
+;; Modified: August 29, 2023
+;; Version: 0.0.4
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
@@ -57,13 +57,12 @@
   "Thread a seed value through the function defined by the composition of a
   list of functions. This higher-order function can simplify (and make more
   expressive) deeply nested compositional patterns."
-  (let ((seed (car args))
-        (fns (cdr args)))
-    (_fold
-      (lambda (acc f)
-        (funcall f acc))
-      seed
-      fns)))
+  (unless (null args)
+    (let ((seed (car args))
+          (fns (cdr args)))
+      (cond ((null fns) seed)
+            (t (apply '_thread (cons (funcall (car fns) seed)
+                                     (cdr fns))))))))
 ;;
 ;;(_thread 8
 ;;  '(lambda (n) (* n n n)) ; cube (note - lambda does not have to be quoted)
