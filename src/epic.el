@@ -19,6 +19,8 @@
 ;;
 ;;; Code:
 
+(require 'cl-lib)
+
 
 ;; map :: (T -> U) -> [T] -> [U]
 (defun _map (f lst)
@@ -173,10 +175,22 @@
 
 
 ;; gcd :: int -> int -> int
-(defun _gcd (a b)
-  "Calculate the greatest common divisor."
-  (cond ((= 0 b) a)
-        (t (_gcd b (mod a b)))))
+;(defun _gcd (a b)
+;  "Calculate the greatest common divisor."
+;  (cond ((= 0 b) a)
+;        (t (_gcd b (mod a b)))))
+
+
+;; gcd :: int -> int -> ... -> int (n-ary)
+(defun _gcd (&rest args)
+  (cl-labels ((gcd (a b)
+                   (cond ((= 0 b) a)
+                         (t (gcd b (mod a b))))))
+    (cond ((= 2 (length args)) (gcd (car args)
+                                    (cadr args)))
+          (t (apply '_gcd (cons (gcd (car args)
+                                     (cadr args))
+                                (cddr args)))))))
 
 
 
