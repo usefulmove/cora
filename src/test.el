@@ -25,7 +25,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test definitions
 
-(defun test-epic-identity-remove-me (error-prelude)
+(defun test-epic-placeholder (error-prelude)
   (when (not (equal 1 0))
     (error (concat error-prelude "error: encrypt char test(s) failed"))))
 
@@ -37,7 +37,7 @@
 (defun test-run-tests ()
   (let* ((prelude "epic-test ... "))
     (message (concat prelude "running tests..."))
-    (test-epic-identity-remove-me prelude) ; placeholder
+    (test-epic-placeholder prelude) ; placeholder
     (message (concat prelude "passed all tests"))))
 
 (test-run-tests)
