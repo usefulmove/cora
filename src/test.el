@@ -25,22 +25,29 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test definitions
 
-(defun test-epic-placeholder (error-prelude)
-  (when (not (equal 1 0))
-    (error (concat error-prelude "error: encrypt char test(s) failed"))))
+(defun test-epic-compound (error-prelude)
+  (when (not (_zero? (- 204 (_sum (_map (_l (a) (* a a)) (_range (_inc 8)))))))
+    (error (concat error-prelude "error: epic compound test(s) failed"))))
+
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test execution
 
-(defun test-run-tests ()
-  (let* ((prelude "epic-test ... "))
+(defun execute-tests (prelude fns)
+  (cond ((null fns) nil)
+        (t (funcall (car fns) prelude)
+           (execute-tests prelude (cdr fns)))))
+
+(defun test-run-tests (&rest tests)
+  (let ((prelude "epic-test ... "))
     (message (concat prelude "running tests..."))
-    (test-epic-placeholder prelude) ; placeholder
+    (execute-tests prelude tests)
     (message (concat prelude "passed all tests"))))
 
-(test-run-tests)
+(test-run-tests
+  'test-epic-compound)
 
 
 
