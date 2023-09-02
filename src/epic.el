@@ -1,12 +1,12 @@
 ;;; epic.el --- Functional programming algorithms library -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2023 Robert Duane Edmonds
+;; Copyright (C) 2023 Duane Edmonds
 ;;
-;; Author: Duane <dedmonds@gmail.com>
-;; Maintainer: Duane <dedmonds@gmail.com>
+;; Author: Duane Edmonds <duane.edmonds@gmail.com>
+;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: August 30, 2023
-;; Version: 0.0.6
+;; Modified: September 2, 2023
+;; Version: 0.0.7
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/dedmonds/epic
 ;; Package-Requires: ((emacs "24.3"))
@@ -20,6 +20,12 @@
 ;;; Code:
 
 (require 'cl-lib)
+
+
+
+;; l (lambda) macro
+(defmacro _l (sym exp)
+  `(lambda ,sym ,exp))
 
 
 ;; map :: (T -> U) -> [T] -> [U]
