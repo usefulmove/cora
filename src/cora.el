@@ -8,7 +8,7 @@
 ;; Modified: September 2, 2023
 ;; Version: 0.2.0
 ;; Keywords: extensions internal lisp tools
-;; Homepage: https://github.com/dedmonds/cora
+;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
