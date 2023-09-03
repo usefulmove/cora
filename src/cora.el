@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 2, 2023
-;; Version: 0.2.0
+;; Version: 0.2.3
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -26,11 +26,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; macros
 
-;; cora macro
-(defmacro cora (sym exp)
-  `(lambda ,sym ,exp))
-
-
 (defmacro equal? (exp exp2)
   `(equal ,exp ,exp2))
 
@@ -39,7 +34,7 @@
   `(funcall ,f ,@args))
 
 
-(defmacro assert (exp1 exp2 error-msg)
+(defmacro assert-equal (exp1 exp2 error-msg)
   `(when (not (equal ,exp1 ,exp2))
      (error ,error-msg)))
 
@@ -189,8 +184,8 @@
   (reverse (cdr (reverse lst))))
 
 
-;; last :: [T] -> [T]
-(defun last (lst)
+;; end :: [T] -> [T]
+(defun end (lst)
   "Return the last element of the list."
   (car (reverse lst)))
 
@@ -203,6 +198,7 @@
 
 ;; gcd :: int -> int -> ... -> int (n-ary)
 (defun gcd (&rest args)
+  "Calculate the greatest common denominator."
   (cl-labels ((gcd (a b)
                    (cond ((= 0 b) a)
                          (t (gcd b (mod a b))))))
