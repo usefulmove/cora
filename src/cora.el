@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 2, 2023
-;; Version: 0.2.3
+;; Modified: September 3, 2023
+;; Version: 0.2.4
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -39,32 +39,24 @@
      (error ,error-msg)))
 
 
+(defmacro map (f lst)
+  `(mapcar ,f ,lst))
+
+
+(defmacro filter (f lst)
+  `(cl-remove-if-not ,f ,lst))
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions
-
-;; map :: (T -> U) -> [T] -> [U]
-(defun map (f lst)
-  "Map function over elements of list and return updated list."
-  (cond ((null lst) '()) ; end of list?
-        (t (cons (funcall f (car lst))
-                 (map f (cdr lst))))))
-
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
 (defun fold (f acc lst)
   "Fold (reduce) list using applied function."
   (cond ((null lst) acc)
         (t (fold f (funcall f acc (car lst)) (cdr lst)))))
-
-
-(defun filter (f lst)
-  "Filter list using applied function."
-  (cond ((null lst) '())
-        ((not (funcall f (car lst))) (filter f (cdr lst)))
-        (t (cons (car lst)
-                 (filter f (cdr lst))))))
 
 
 ;; partial :: (... -> T -> U) -> [...] -> (T -> U)
