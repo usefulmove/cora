@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 3, 2023
-;; Version: 0.2.3
+;; Version: 0.2.5
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -129,12 +129,23 @@
     (concat error-prelude "error: fold test(s) failed")))
 
 
+(defun cora-test-drop-take (error-prelude)
+  (assert-equal
+    '(3 1 2)
+    (take 3 '(3 1 2 0 5 4))
+    (concat error-prelude "error: take test(s) failed"))
+  (assert-equal
+    '(0 5 4)
+    (drop 3 '(3 1 2 0 5 4))
+    (concat error-prelude "error: drop test(s) failed")))
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run unit tests
 
-(defun test-run-tests (&rest tests)
+(defun cora-test-run-tests (&rest tests)
   (letrec ((prelude "cora-test ... ")
            (execute-tests (lambda (fns)
                             (cond ((null fns) nil)
@@ -144,7 +155,8 @@
     (call execute-tests tests)
     (message (concat prelude "passed all tests"))))
 
-(test-run-tests
+
+(cora-test-run-tests
   'cora-test-compound
   'cora-test-compound2
   'cora-test-compound3
@@ -153,7 +165,8 @@
   'cora-test-string-join
   'cora-test-curry
   'cora-test-partial
-  'cora-test-fold)
+  'cora-test-fold
+  'cora-test-drop-take)
 
 
 

@@ -54,7 +54,8 @@
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
 (defun fold (f acc lst)
-  "Fold (reduce) list using applied function."
+  "Fold (reduce) list LST using applied function F starting with initial value
+  ACC for the accumulator."
   (cond ((null lst) acc)
         (t (fold f (funcall f acc (car lst)) (cdr lst)))))
 
@@ -83,7 +84,7 @@
 
 ;; compose :: [(T -> T)] -> (T -> T)
 (defun compose (&rest fns)
-  "Create composed function constructed of function arguments."
+  "Create composed function constructed of function arguments FNS."
   (cond ((null fns) 'identity)
         (t (let ((last-f (car fns))
                  (rest-f (apply 'compose (cdr fns))))
@@ -93,20 +94,21 @@
 
 ;; pipe :: [(T -> T)] -> (T -> T)
 (defun pipe (&rest fns)
-  "Create composed function constructed of function arguments. The order of
-  function application is reversed from the compose function."
+  "Create composed function constructed of function arguments FNS. The order
+  of function application is reversed from the compose function."
   (apply 'compose (reverse fns)))
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
 (defun curry2 (f)
-  "Return curried binary function."
+  "Return curried binary function F."
   (lambda (a)
     (lambda (b) (funcall f a b))))
 
 
 ;; range :: number -> [number]
 (defun range (n)
+  "Generate a list of values from 0 to (- N 1)."
   (cond ((= 0 n) '())
         (t (append (range (- n 1))
                    (list (- n 1))))))
@@ -114,38 +116,43 @@
 
 ;; inc :: number -> number
 (defun inc (n)
-  "Increment number."
+  "Increment number N."
   (+ 1 n))
 
 
 ;; dec :: number -> number
 (defun dec (n)
-  "Decrement number."
+  "Decrement number N."
   (- n 1))
 
 
 ;; even? :: number -> boolean
 (defun even? (n)
+  "Is N even?"
   (= 0 (mod n 2)))
 
 
 ;; odd? :: number -> boolean
 (defun odd? (n)
+  "Is N odd?"
   (= 1 (mod n 2)))
 
 
 ;; zero? :: number -> boolean
 (defun zero? (n)
+  "Is N equal to zero?"
   (= 0 n))
 
 
 ;; sum :: [T] -> T
 (defun sum (lst)
+  "Sum elements of list LST."
   (apply '+ lst))
 
 
 ;; prod :: [T] -> T
 (defun prod (lst)
+  "Calculate the product of elements of list LST."
   (apply '* lst))
 
 
@@ -159,7 +166,8 @@
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
 (defun any? (f lst)
-  "Check that function applied to at least one value in the list returns true."
+  "Check that function (F) applied to at least one value in the
+  list LST returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
         (t (any? f (cdr lst)))))
@@ -167,25 +175,25 @@
 
 ;; init :: [T] -> [T]
 (defun init (lst)
-  "Return all elements of list except first."
+  "Return all elements of list LST except first."
   (reverse (cdr (reverse lst))))
 
 
 ;; end :: [T] -> [T]
 (defun end (lst)
-  "Return the last element of the list."
+  "Return the last element of the list LST."
   (car (reverse lst)))
 
 
 ;; join-chars :: [char] -> string
 (defun join-chars (chars)
-  "Join the elements of list of characters into a string."
+  "Join the elements of list of characters CHARS into a string."
   (apply 'string chars))
 
 
 ;; gcd :: int -> int -> ... -> int (n-ary)
 (defun gcd (&rest args)
-  "Calculate the greatest common denominator."
+  "Calculate the greatest common denominator of ARGS."
   (cl-labels ((gcd (a b)
                    (cond ((= 0 b) a)
                          (t (gcd b (mod a b))))))
@@ -194,6 +202,22 @@
           (t (apply 'gcd (cons (gcd (car args)
                                      (cadr args))
                                 (cddr args)))))))
+
+
+;; take :: int -> [T] -> [T]
+(defun take (n lst)
+  "Take first N elements from list LST."
+  (cond ((null lst) '())
+        ((= 0 n) '())
+        (t (cons (car lst) (take (- n 1) (cdr lst))))))
+
+
+;; drop :: int -> [T] -> [T]
+(defun drop (n lst)
+  "Drop first N elements from list LST."
+  (cond ((null lst) '())
+        ((= 0 n) lst)
+        (t (drop (- n 1) (cdr lst)))))
 
 
 
