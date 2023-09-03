@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 2, 2023
-;; Version: 0.2.1
+;; Modified: September 3, 2023
+;; Version: 0.2.3
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -34,11 +34,30 @@
 
 
 (defun cora-test-compound2 (error-prelude)
-  (when (not (equal? 1157625
-                     (prod (filter 'odd? (map
-                                           (lambda (a) (* a a a))
-                                           (range (dec 10)))))))
-    (error (concat error-prelude "error: compound2 test(s) failed"))))
+  (assert-equal
+    1157625
+    (prod (filter 'odd? (map
+                          (lambda (a) (* a a a))
+                          (range (dec 10)))))
+    (concat error-prelude "error: compound2 test(s) failed"))
+  (assert-equal
+    '(3 1)
+    (init '(3 1 2))
+    (concat error-prelude "error: compound2 test(s) failed"))
+  (assert-equal
+    2
+    (end '(3 1 2))
+    (concat error-prelude "error: compound2 test(s) failed"))
+  (assert-equal
+    t
+    (all? 'even? (map
+                   (lambda (a) (* 2 a))
+                   (range (inc 31))))
+    (concat error-prelude "error: compound2 test(s) failed"))
+  (assert-equal
+    6
+    (gcd 18 30 12)
+    (concat error-prelude "error: compound2 test(s) failed")))
 
 
 (defun cora-test-compound3 (error-prelude)
@@ -51,10 +70,10 @@
                        'sqrt
                        (lambda (a) (- a 1))
                        (lambda (a) (/ a 2)))
-                      (call (pipe 'sqrt
-                                    (lambda (a) (- a 1))
-                                    (lambda (a) (/ a 2)))
-                       5)))
+                     (call (pipe 'sqrt
+                                 (lambda (a) (- a 1))
+                                 (lambda (a) (/ a 2)))
+                      5)))
     (error (concat error-prelude "error: function composition (1) test(s) failed"))))
 
 
@@ -66,18 +85,48 @@
                      (call (compose (lambda (a) (/ a 2))
                                     (lambda (a) (- a 1))
                                     'sqrt)
-                       5)))
+                      5)))
     (error (concat error-prelude "error: function composition (2) test(s) failed"))))
 
 
-; TODO to be defined
-;(defun cora-test-currying (error-prelude)
-;  )
+(defun cora-test-string-join (error-prelude)
+  (let ((s "desafortunadamente"))
+    (assert-equal
+      (reverse s)
+      (thread s
+        'string-to-list
+        'reverse
+        'join-chars)
+      (concat error-prelude "error: string join test(s) failed"))))
 
 
-; TODO missing test coverage
-; fold partial curry2 assert-equal
-; all? init join-chars gcd end
+(defun cora-test-curry (error-prelude)
+  (letrec ((square (lambda (a) (* a a)))
+           (sum-squares (lambda (a b)
+                          (sqrt (+ (call square a)
+                                   (call square b))))))
+    (assert-equal
+      (call sum-squares 3 4)
+      (call (call (curry2 sum-squares) 3) 4)
+      (concat error-prelude "error: curry test(s) failed"))))
+
+
+(defun cora-test-partial (error-prelude)
+  (letrec ((square (lambda (a) (* a a)))
+           (sum-squares (lambda (a b)
+                          (sqrt (+ (call square a)
+                                   (call square b))))))
+    (assert-equal
+      (call sum-squares 3 4)
+      (call (partial sum-squares 3) 4)
+      (concat error-prelude "error: partial test(s) failed"))))
+
+
+(defun cora-test-fold (error-prelude)
+  (assert-equal
+    204
+    (fold (lambda (acc a) (+ acc (* a a))) 0 (range (inc 8)))
+    (concat error-prelude "error: fold test(s) failed")))
 
 
 
@@ -100,9 +149,11 @@
   'cora-test-compound2
   'cora-test-compound3
   'cora-test-function-composition
-  'cora-test-function-composition2)
-  ;'cora-test-currying)
-
+  'cora-test-function-composition2
+  'cora-test-string-join
+  'cora-test-curry
+  'cora-test-partial
+  'cora-test-fold)
 
 
 
