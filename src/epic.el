@@ -1,4 +1,4 @@
-;;; epic.el --- Functional programming algorithms library -*- lexical-binding: t; -*-
+;;; cora.el --- Cora programming language -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2023 Duane Edmonds
 ;;
@@ -6,16 +6,16 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 2, 2023
-;; Version: 0.0.7
+;; Version: 0.2.0
 ;; Keywords: extensions internal lisp tools
-;; Homepage: https://github.com/dedmonds/epic
+;; Homepage: https://github.com/dedmonds/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;  Description:  functional programming algorithms
+;;  Description:  Cora programming language
 ;;
 ;;; Code:
 
@@ -23,36 +23,57 @@
 
 
 
-;; l (lambda) macro
-(defmacro _l (sym exp)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; macros
+
+;; cora macro
+(defmacro cora (sym exp)
   `(lambda ,sym ,exp))
 
 
+(defmacro equal? (exp exp2)
+  `(equal ,exp ,exp2))
+
+
+(defmacro call (f &rest args)
+  `(funcall ,f ,@args))
+
+
+(defmacro assert (exp1 exp2 error-msg)
+  `(when (not (equal ,exp1 ,exp2))
+     (error ,error-msg)))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; functions
+
 ;; map :: (T -> U) -> [T] -> [U]
-(defun _map (f lst)
+(defun map (f lst)
   "Map function over elements of list and return updated list."
   (cond ((null lst) '()) ; end of list?
         (t (cons (funcall f (car lst))
-                 (_map f (cdr lst))))))
+                 (map f (cdr lst))))))
 
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
-(defun _fold (f acc lst)
+(defun fold (f acc lst)
   "Fold (reduce) list using applied function."
   (cond ((null lst) acc)
-        (t (_fold f (funcall f acc (car lst)) (cdr lst)))))
+        (t (fold f (funcall f acc (car lst)) (cdr lst)))))
 
 
-(defun _filter (f lst)
+(defun filter (f lst)
   "Filter list using applied function."
   (cond ((null lst) '())
-        ((not (funcall f (car lst))) (_filter f (cdr lst)))
+        ((not (funcall f (car lst))) (filter f (cdr lst)))
         (t (cons (car lst)
-                 (_filter f (cdr lst))))))
+                 (filter f (cdr lst))))))
 
 
 ;; partial :: (... -> T -> U) -> [...] -> (T -> U)
-(defun _partial (&rest args)
+(defun partial (&rest args)
   "Return unary function when passed an n-ary function and (- n 1) arguments."
   (let ((f (car args))
         (fargs (cdr args)))
@@ -61,7 +82,7 @@
 
 
 ;; thread :: T -> [(T -> T)] -> T
-(defun _thread (&rest args)
+(defun thread (&rest args)
   "Thread a seed value through the function defined by the composition of a
   list of functions. This higher-order function can simplify (and make more
   expressive) deeply nested compositional patterns."
@@ -69,137 +90,130 @@
     (let ((seed (car args))
           (fns (cdr args)))
       (cond ((null fns) seed)
-            (t (apply '_thread (cons (funcall (car fns) seed)
+            (t (apply 'thread (cons (funcall (car fns) seed)
                                      (cdr fns))))))))
 ;;
-;;(_thread 8
+;;(thread 8
 ;;  '(lambda (n) (* n n n)) ; cube (note - lambda does not have to be quoted)
 ;;  'number-to-string
 ;;  'message) ; => "512"
 
 
 ;; compose :: [(T -> T)] -> (T -> T)
-(defun _compose (&rest fns)
+(defun compose (&rest fns)
   "Create composed function constructed of function arguments."
   (cond ((null fns) 'identity)
         (t (let ((last-f (car fns))
-                 (rest-f (apply '_compose (cdr fns))))
+                 (rest-f (apply 'compose (cdr fns))))
              (lambda (seed)
                (funcall last-f (funcall rest-f seed)))))))
 
 
 ;; pipe :: [(T -> T)] -> (T -> T)
-(defun _pipe (&rest fns)
+(defun pipe (&rest fns)
   "Create composed function constructed of function arguments. The order of
   function application is reversed from the compose function."
-  (apply '_compose (reverse fns)))
+  (apply 'compose (reverse fns)))
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
-(defun _curry2 (f)
+(defun curry2 (f)
   "Return curried binary function."
   (lambda (a)
     (lambda (b) (funcall f a b))))
 
 
 ;; range :: number -> [number]
-(defun _range (n)
+(defun range (n)
   (cond ((= 0 n) '())
-        (t (append (_range (- n 1))
+        (t (append (range (- n 1))
                    (list (- n 1))))))
 
 
 ;; inc :: number -> number
-(defun _inc (n)
+(defun inc (n)
   "Increment number."
   (+ 1 n))
 
 
 ;; dec :: number -> number
-(defun _dec (n)
+(defun dec (n)
   "Decrement number."
   (- n 1))
 
 
 ;; even? :: number -> boolean
-(defun _even? (n)
+(defun even? (n)
   (= 0 (mod n 2)))
 
 
 ;; odd? :: number -> boolean
-(defun _odd? (n)
+(defun odd? (n)
   (= 1 (mod n 2)))
 
 
 ;; zero? :: number -> boolean
-(defun _zero? (n)
+(defun zero? (n)
   (= 0 n))
 
 
 ;; sum :: [T] -> T
-(defun _sum (lst)
+(defun sum (lst)
   (apply '+ lst))
 
 
 ;; prod :: [T] -> T
-(defun _prod (lst)
+(defun prod (lst)
   (apply '* lst))
 
 
 ;; all? :: (T -> boolean) -> [T] -> boolean
-(defun _all? (f lst)
+(defun all? (f lst)
   "Check that function applied to all values in the list returns true."
   (cond ((null lst) t)
         ((not (funcall f (car lst))) nil)
-        (t (_all? f (cdr lst)))))
+        (t (all? f (cdr lst)))))
 
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
-(defun _any? (f lst)
+(defun any? (f lst)
   "Check that function applied to at least one value in the list returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
-        (t (_any? f (cdr lst)))))
+        (t (any? f (cdr lst)))))
 
 
 ;; init :: [T] -> [T]
-(defun _init (lst)
+(defun init (lst)
   "Return all elements of list except first."
   (reverse (cdr (reverse lst))))
 
 
 ;; last :: [T] -> [T]
-(defun _last (lst)
+(defun last (lst)
   "Return the last element of the list."
   (car (reverse lst)))
 
 
 ;; join-chars :: [char] -> string
-(defun _join-chars (chars)
+(defun join-chars (chars)
   "Join the elements of list of characters into a string."
   (apply 'string chars))
 
 
-;; gcd :: int -> int -> int
-;(defun _gcd (a b)
-;  "Calculate the greatest common divisor."
-;  (cond ((= 0 b) a)
-;        (t (_gcd b (mod a b)))))
-
-
 ;; gcd :: int -> int -> ... -> int (n-ary)
-(defun _gcd (&rest args)
+(defun gcd (&rest args)
   (cl-labels ((gcd (a b)
                    (cond ((= 0 b) a)
                          (t (gcd b (mod a b))))))
     (cond ((= 2 (length args)) (gcd (car args)
                                     (cadr args)))
-          (t (apply '_gcd (cons (gcd (car args)
+          (t (apply 'gcd (cons (gcd (car args)
                                      (cadr args))
                                 (cddr args)))))))
 
 
 
 
-(provide 'epic)
-;;; epic.el ends here
+(provide 'cora)
+;;; cora.el ends here
