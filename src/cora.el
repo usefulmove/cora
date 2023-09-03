@@ -15,7 +15,7 @@
 ;;
 ;;; Commentary:
 ;;
-;;  Description:  Cora programming language
+;;  Description: Cora programming language
 ;;
 ;;; Code:
 
@@ -79,11 +79,6 @@
       (cond ((null fns) seed)
             (t (apply 'thread (cons (funcall (car fns) seed)
                                      (cdr fns))))))))
-;;
-;;(thread 8
-;;  '(lambda (n) (* n n n)) ; cube (note - lambda does not have to be quoted)
-;;  'number-to-string
-;;  'message) ; => "512"
 
 
 ;; compose :: [(T -> T)] -> (T -> T)
