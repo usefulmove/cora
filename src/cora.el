@@ -159,7 +159,8 @@
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
 (defun any? (f lst)
-  "Check that function applied to at least one value in the list returns true."
+  "Check that function (F) applied to at least one value in the
+  list (LST) returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
         (t (any? f (cdr lst)))))
@@ -167,19 +168,19 @@
 
 ;; init :: [T] -> [T]
 (defun init (lst)
-  "Return all elements of list except first."
+  "Return all elements of list (LST) except first."
   (reverse (cdr (reverse lst))))
 
 
 ;; end :: [T] -> [T]
 (defun end (lst)
-  "Return the last element of the list."
+  "Return the last element of the list (LST)."
   (car (reverse lst)))
 
 
 ;; join-chars :: [char] -> string
 (defun join-chars (chars)
-  "Join the elements of list of characters into a string."
+  "Join the elements of list of characters (CHARS) into a string."
   (apply 'string chars))
 
 
@@ -194,6 +195,22 @@
           (t (apply 'gcd (cons (gcd (car args)
                                      (cadr args))
                                 (cddr args)))))))
+
+
+;; take :: int -> [T] -> [T]
+(defun take (n lst)
+  "Take first N elements from list (LST)."
+  (cond ((null lst) '())
+        ((= 0 n) '())
+        (t (cons (car lst) (take (- n 1) (cdr lst))))))
+
+
+;; drop :: int -> [T] -> [T]
+(defun drop (n lst)
+  "Drop first N elements from list (LST)."
+  (cond ((null lst) '())
+        ((= 0 n) lst)
+        (t (drop (- n 1) (cdr lst)))))
 
 
 
