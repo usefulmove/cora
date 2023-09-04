@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 3, 2023
-;; Version: 0.2.4
+;; Version: 0.2.5
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -142,6 +142,11 @@
 (defun zero? (n)
   "Is N equal to zero?"
   (= 0 n))
+
+
+(defun ascii-numeric? (c)
+  "Check is C a valid ascii numeric character?"
+  (and (>= c ?0) (<= c ?9)))
 
 
 ;; sum :: [T] -> T

@@ -57,6 +57,10 @@
   (assert-equal
     6
     (gcd 18 30 12)
+    (concat error-prelude "error: compound2 test(s) failed"))
+  (assert-equal
+    (not (any? 'ascii-numeric? (list 46 47 58 59)))
+    (all? 'ascii-numeric? (list ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     (concat error-prelude "error: compound2 test(s) failed")))
 
 
