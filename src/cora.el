@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 3, 2023
-;; Version: 0.2.5
+;; Version: 0.2.6
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -46,6 +46,9 @@
 (defmacro filter (f lst)
   `(cl-remove-if-not ,f ,lst))
 
+
+; flatten :: [[T]] -> [T]
+(fset 'flatten '-flatten)
 
 
 
