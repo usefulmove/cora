@@ -5,7 +5,7 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 3, 2023
+;; Modified: September 5, 2023
 ;; Version: 0.2.6
 ;; Keywords: extensions internal lisp tools
 ;; Homepage: https://github.com/usefulmove/cora
@@ -25,23 +25,24 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; macros
 
+; equal? :: sexp -> sexp -> boolean
 (defmacro equal? (exp exp2)
   `(equal ,exp ,exp2))
 
-
+; call
 (defmacro call (f &rest args)
   `(funcall ,f ,@args))
 
-
+; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
 (defmacro assert-equal (exp1 exp2 error-msg)
   `(when (not (equal ,exp1 ,exp2))
      (error ,error-msg)))
 
-
+; map :: (T -> U) -> [T] -> [U]
 (defmacro map (f lst)
   `(mapcar ,f ,lst))
 
-
+; filter :: (T -> boolean) -> [T] -> [T]
 (defmacro filter (f lst)
   `(cl-remove-if-not ,f ,lst))
 
@@ -223,6 +224,8 @@
   (cond ((null lst) '())
         ((= 0 n) lst)
         (t (drop (- n 1) (cdr lst)))))
+
+
 
 
 (provide 'cora)

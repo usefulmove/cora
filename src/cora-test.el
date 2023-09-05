@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 3, 2023
-;; Version: 0.2.5
+;; Modified: September 5, 2023
+;; Version: 0.2.6
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -134,7 +134,16 @@
   (assert-equal
     204
     (fold (lambda (acc a) (+ acc (* a a))) 0 (range (inc 8)))
-    (concat error-prelude "error: fold test(s) failed")))
+    (concat error-prelude "error: fold test(s) failed"))
+  (let ((input "this is a test"))
+    (assert-equal
+      input
+      (fold ; TODO add to unit tests (Cora)
+        (lambda (acc a)
+               (concat acc (join-chars (list a))))
+        ""
+        (string-to-list input))
+      (concat error-prelude "error: fold test(s) failed"))))
 
 
 (defun cora-test-drop-take (error-prelude)
