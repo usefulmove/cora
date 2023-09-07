@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 5, 2023
-;; Version: 0.2.6
+;; Modified: September 6, 2023
+;; Version: 0.2.7
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -86,14 +86,14 @@
 
 
 (defun cora-test-function-composition2 (error-prelude)
-  (when (not (equal? (thread 5
-                       'sqrt
-                       (lambda (a) (- a 1))
-                       (lambda (a) (/ a 2)))
-                     (call (compose (lambda (a) (/ a 2))
-                                    (lambda (a) (- a 1))
-                                    'sqrt)
-                      5)))
+  (when (not= (thread 5
+                'sqrt
+                (lambda (a) (- a 1))
+                (lambda (a) (/ a 2)))
+              (call (compose (lambda (a) (/ a 2))
+                             (lambda (a) (- a 1))
+                             'sqrt)
+               5))
     (error (concat error-prelude "error: function composition (2) test(s) failed"))))
 
 

@@ -5,9 +5,9 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 5, 2023
-;; Version: 0.2.6
-;; Keywords: extensions internal lisp tools
+;; Modified: September 6, 2023
+;; Version: 0.2.7
+;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
@@ -28,6 +28,10 @@
 ; equal? :: sexp -> sexp -> boolean
 (defmacro equal? (exp exp2)
   `(equal ,exp ,exp2))
+
+;; not= :: sexp -> sexp -> boolean
+(defmacro not= (exp exp2)
+  `(not (= ,exp ,exp2)))
 
 ; call
 (defmacro call (f &rest args)
