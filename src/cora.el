@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 7, 2023
-;; Version: 0.2.8
+;; Version: 0.2.9
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -238,6 +238,13 @@
                        (car lst2))
                  (zip (cdr lst1)
                       (cdr lst2))))))
+
+
+;; enumerate :: [T] -> [[integer T]]
+(defun enumerate (lst)
+  (zip (range (length lst))
+       lst))
+
 
 
 
