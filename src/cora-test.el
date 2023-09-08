@@ -6,14 +6,14 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 7, 2023
-;; Version: 0.2.9
+;; Version: 0.2.10
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary:
+;;; Commentary: Cora source code ~/repos/cora/src/cora.el
 ;;
 ;;  Description: Cora language unit tests
 ;;
@@ -165,11 +165,16 @@
     (concat error-prelude "error: drop test(s) failed")))
 
 
-(defun cora-test-enumerate (error-prelude)
+(defun cora-test-enumerate-partition (error-prelude)
   (assert-equal
-   '((0 3) (1 1) (2 2) (3 5) (4 4))
-   (enumerate '(3 1 2 5 4))
+    '((0 3) (1 1) (2 2) (3 5) (4 4))
+    (enumerate '(3 1 2 5 4))
+    (concat error-prelude "error: drop test(s) failed"))
+  (assert-equal
+    '((5 3 1) (6 4 0 2 8))
+    (partition 'odd? '(8 1 2 0 3 5 4 6))
     (concat error-prelude "error: drop test(s) failed")))
+
 
 
 
@@ -201,7 +206,7 @@
   'cora-test-fold
   'cora-test-drop-take
   'cora-test-zip
-  'cora-test-enumerate)
+  'cora-test-enumerate-partition)
 
 
 

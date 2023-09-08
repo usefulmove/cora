@@ -6,14 +6,14 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 7, 2023
-;; Version: 0.2.9
+;; Version: 0.2.10
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary:
+;;; Commentary: unit tests ~/repos/cora/src/cora-test.el
 ;;
 ;;  Description: Cora programming language
 ;;
@@ -34,8 +34,8 @@
   `(not (= ,exp ,exp2)))
 
 ; call
-(defmacro call (f &rest args)
-  `(funcall ,f ,@args))
+(defmacro call (fn &rest args)
+  `(funcall ,fn ,@args))
 
 ; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
 (defmacro assert-equal (exp1 exp2 error-msg)
@@ -43,12 +43,12 @@
      (error ,error-msg)))
 
 ; map :: (T -> U) -> [T] -> [U]
-(defmacro map (f lst)
-  `(mapcar ,f ,lst))
+(defmacro map (fn lst)
+  `(mapcar ,fn ,lst))
 
 ; filter :: (T -> boolean) -> [T] -> [T]
-(defmacro filter (f lst)
-  `(cl-remove-if-not ,f ,lst))
+(defmacro filter (fn lst)
+  `(cl-remove-if-not ,fn ,lst))
 
 ; flatten :: [[T]] -> [T]
 (fset 'flatten '-flatten)
@@ -58,20 +58,20 @@
 ;; functions
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
-(defun fold (f acc lst)
-  "Fold (reduce) list LST using applied function F starting with initial value
+(defun fold (fn acc lst)
+  "Fold (reduce) list LST using applied function FN starting with initial value
   ACC for the accumulator."
   (cond ((null lst) acc)
-        (t (fold f (funcall f acc (car lst)) (cdr lst)))))
+        (t (fold fn (funcall fn acc (car lst)) (cdr lst)))))
 
 
 ;; partial :: (... -> T -> U) -> [...] -> (T -> U)
 (defun partial (&rest args)
   "Return unary function when passed an n-ary function and (- n 1) arguments."
-  (let ((f (car args))
+  (let ((fn (car args))
         (fargs (cdr args)))
     (lambda (a)
-      (apply f (append fargs (list a))))))
+      (apply fn (append fargs (list a))))))
 
 
 ;; thread :: T -> [(T -> T)] -> T
@@ -91,10 +91,10 @@
 (defun compose (&rest fns)
   "Create composed function constructed of function arguments FNS."
   (cond ((null fns) 'identity)
-        (t (let ((last-f (car fns))
-                 (rest-f (apply 'compose (cdr fns))))
+        (t (let ((last-fn (car fns))
+                 (rest-fn (apply 'compose (cdr fns))))
              (lambda (seed)
-               (funcall last-f (funcall rest-f seed)))))))
+               (funcall last-fn (funcall rest-fn seed)))))))
 
 
 ;; pipe :: [(T -> T)] -> (T -> T)
@@ -105,10 +105,10 @@
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
-(defun curry2 (f)
-  "Return curried binary function F."
+(defun curry2 (fn)
+  "Return curried binary function FN."
   (lambda (a)
-    (lambda (b) (funcall f a b))))
+    (lambda (b) (funcall fn a b))))
 
 
 ;; range :: number -> [number]
@@ -167,20 +167,20 @@
 
 
 ;; all? :: (T -> boolean) -> [T] -> boolean
-(defun all? (f lst)
+(defun all? (fn lst)
   "Check that function applied to all values in the list returns true."
   (cond ((null lst) t)
-        ((not (funcall f (car lst))) nil)
-        (t (all? f (cdr lst)))))
+        ((not (funcall fn (car lst))) nil)
+        (t (all? fn (cdr lst)))))
 
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
-(defun any? (f lst)
-  "Check that function (F) applied to at least one value in the
+(defun any? (fn lst)
+  "Check that function (FN) applied to at least one value in the
   list LST returns true."
   (cond ((null lst) nil)
-        ((funcall f (car lst)) t)
-        (t (any? f (cdr lst)))))
+        ((funcall fn (car lst)) t)
+        (t (any? fn (cdr lst)))))
 
 
 ;; init :: [T] -> [T]
@@ -246,6 +246,17 @@
        lst))
 
 
+;; partition :: (T -> boolean) -> [T] -> [[T] [T]]
+(defun partition (fn lst)
+  (fold
+    (lambda (acc e)
+      (if (call fn e)
+          (list (cons e (car acc)) ; match - add to first element of accumulator
+                (cadr acc))
+          (list (car acc)
+                (cons e (cadr acc))))) ; no match - added to second element of accumulator
+    '(() ())
+    lst))
 
 
 
