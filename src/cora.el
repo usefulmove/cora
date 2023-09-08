@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 6, 2023
-;; Version: 0.2.7
+;; Modified: September 7, 2023
+;; Version: 0.2.8
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -228,6 +228,16 @@
   (cond ((null lst) '())
         ((= 0 n) lst)
         (t (drop (- n 1) (cdr lst)))))
+
+
+;; zip :: [T] -> [U] -> [[T U]]
+(defun zip (lst1 lst2)
+  (cond ((or (null lst1)
+             (null lst2)) '())
+        (t (cons (list (car lst1)
+                       (car lst2))
+                 (zip (cdr lst1)
+                      (cdr lst2))))))
 
 
 
