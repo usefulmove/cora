@@ -110,7 +110,7 @@ list of functions FNS. This higher-order function can simplify (and make more
 expressive) deeply nested compositional patterns."
   (cond ((null fns) seed)
         (t (apply 'thread (cons (funcall (car fns) seed)
-                              (cdr fns))))))
+                                (cdr fns))))))
 
 
 ;; compose :: [(T -> T)] -> (T -> T)
