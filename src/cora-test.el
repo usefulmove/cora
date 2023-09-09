@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.13
+;; Version: 0.2.14
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -21,7 +21,9 @@
 ;;
 ;;; Code:
 
-(load-file "~/repos/cora/src/cora.el") ; load Cora language
+; load Cora language
+(add-to-list 'load-path "~/repos/cora/src/")
+(require 'cora)
 
 
 
