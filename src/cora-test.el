@@ -6,18 +6,20 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.12
+;; Version: 0.2.13
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "25.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary: Cora source code ~/repos/cora/src/cora.el
+;;; Commentary:
 ;;
 ;;  Description: Cora unit tests
 ;;
-;; Code:
+;;  Source code: ~/repos/cora/src/cora.el
+;;
+;;; Code:
 
 (load-file "~/repos/cora/src/cora.el") ; load Cora language
 

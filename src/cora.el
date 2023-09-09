@@ -6,16 +6,18 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.12
+;; Version: 0.2.13
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "25.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary: Unit tests @ ~/repos/cora/src/cora-test.el
+;;; Commentary:
 ;;
 ;;  Description: Cora functional programming
+;;
+;;  Unit tests: ~/repos/cora/src/cora-test.el
 ;;
 ;;; Code:
 
@@ -102,16 +104,13 @@ BODY should be a list of Lisp expressions.
 
 
 ;; thread :: T -> [(T -> T)] -> T
-(defun thread (&rest args)
-  "Thread a seed value through the function defined by the composition of a
-  list of functions. This higher-order function can simplify (and make more
-  expressive) deeply nested compositional patterns."
-  (unless (null args)
-    (let ((seed (car args))
-          (fns (cdr args)))
-      (cond ((null fns) seed)
-            (t (apply 'thread (cons (funcall (car fns) seed)
-                                     (cdr fns))))))))
+(defun thread (seed &rest fns)
+  "Thread a SEED value through the function defined by the composition of the
+list of functions FNS. This higher-order function can simplify (and make more
+expressive) deeply nested compositional patterns."
+  (cond ((null fns) seed)
+        (t (apply 'thread (cons (funcall (car fns) seed)
+                              (cdr fns))))))
 
 
 ;; compose :: [(T -> T)] -> (T -> T)
