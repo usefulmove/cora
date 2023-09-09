@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 8, 2023
-;; Version: 0.2.11
+;; Modified: September 9, 2023
+;; Version: 0.2.12
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -35,36 +35,36 @@
 
 (defun cora-test-compound2 (error-prelude)
   (assert-equal
-    1157625
     (prod (filter 'odd? (map
                           (fn (a) (* a a a))
                           (range (dec 10)))))
+    1157625
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
-    '(3 1)
     (init '(3 1 2))
+    '(3 1)
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
-    2
     (end '(3 1 2))
+    2
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
-    t
     (all? 'even? (map
                    (fn (a) (* 2 a))
                    (range (inc 31))))
+    t
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
-    6
     (gcd 18 30 12)
+    6
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
     (not (any? 'ascii-numeric? (list 46 47 58 59)))
     (all? 'ascii-numeric? (list ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
-    '(3 1 2 1 2)
     (flatten '(3 1 (2 1 2)))
+    '(3 1 2 1 2)
     (concat error-prelude "error: compound2 test(s) failed")))
 
 
@@ -100,11 +100,11 @@
 (defun cora-test-string-join (error-prelude)
   (let ((s "desafortunadamente"))
     (assert-equal
-      (reverse s)
       (thread s
         'string-to-list
         'reverse
         'join-chars)
+      (reverse s)
       (concat error-prelude "error: string join test(s) failed"))))
 
 
@@ -132,47 +132,55 @@
 
 (defun cora-test-fold (error-prelude)
   (assert-equal
-    204
     (fold (fn (acc a) (+ acc (* a a))) 0 (range (inc 8)))
+    204
     (concat error-prelude "error: fold test(s) failed"))
   (let ((input "this is a test"))
     (assert-equal
-      input
       (fold ; TODO add to unit tests (Cora)
         (fn (acc a)
                (concat acc (join-chars (list a))))
         ""
         (string-to-list input))
+      input
       (concat error-prelude "error: fold test(s) failed"))))
 
 
 (defun cora-test-drop-take (error-prelude)
   (assert-equal
-    '(3 1 2)
     (take 3 '(3 1 2 0 5 4))
+    '(3 1 2)
     (concat error-prelude "error: take test(s) failed"))
   (assert-equal
-    '(0 5 4)
+    (takebut 2 '(3 1 2 0 5 4))
+    '(3 1 2 0)
+    (concat error-prelude "error: take test(s) failed"))
+  (assert-equal
     (drop 3 '(3 1 2 0 5 4))
+    '(0 5 4)
+    (concat error-prelude "error: drop test(s) failed"))
+  (assert-equal
+    (dropbut 2 '(3 1 2 0 5 4))
+    '(5 4)
     (concat error-prelude "error: drop test(s) failed")))
 
 
 (defun cora-test-zip (error-prelude)
   (assert-equal
-    '((3 0) (1 1) (2 2) (5 3))
     (zip '(3 1 2 5 4)
          '(0 1 2 3))
+    '((3 0) (1 1) (2 2) (5 3))
     (concat error-prelude "error: drop test(s) failed")))
 
 
 (defun cora-test-enumerate-partition (error-prelude)
   (assert-equal
-    '((0 3) (1 1) (2 2) (3 5) (4 4))
     (enumerate '(3 1 2 5 4))
+    '((0 3) (1 1) (2 2) (3 5) (4 4))
     (concat error-prelude "error: drop test(s) failed"))
   (assert-equal
-    '((5 3 1) (6 4 0 2 8))
     (partition 'odd? '(8 1 2 0 3 5 4 6))
+    '((5 3 1) (6 4 0 2 8))
     (concat error-prelude "error: drop test(s) failed")))
 
 

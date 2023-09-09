@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 8, 2023
-;; Version: 0.2.11
+;; Modified: September 9, 2023
+;; Version: 0.2.12
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -249,12 +249,24 @@ of function application is reversed from the compose function."
         (t (cons (car lst) (take (- n 1) (cdr lst))))))
 
 
+;; takebut :: int -> [T] -> [T]
+(defun takebut (n lst)
+  "Take all but last N elements from list LST."
+  (take (- (length lst) n) lst))
+
+
 ;; drop :: int -> [T] -> [T]
 (defun drop (n lst)
   "Drop first N elements from list LST."
   (cond ((null lst) '())
         ((= 0 n) lst)
         (t (drop (- n 1) (cdr lst)))))
+
+
+;; dropbut :: int -> [T] -> [T]
+(defun dropbut (n lst)
+  "Drop all but last N elements from list LST."
+  (drop (- (length lst) n) lst))
 
 
 ;; zip :: [T] -> [U] -> [[T U]]
