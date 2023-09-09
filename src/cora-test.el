@@ -1,12 +1,12 @@
-;;; cora-test.el --- Unit tests for Cora programming language -*- lexical-binding: t; -*-
+;;; cora-test.el --- Unit tests for Cora functional programming -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2023 Duane Edmonds
 ;;
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 7, 2023
-;; Version: 0.2.10
+;; Modified: September 8, 2023
+;; Version: 0.2.11
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
@@ -15,7 +15,7 @@
 ;;
 ;;; Commentary: Cora source code ~/repos/cora/src/cora.el
 ;;
-;;  Description: Cora language unit tests
+;;  Description: Cora unit tests
 ;;
 ;; Code:
 
@@ -28,7 +28,7 @@
 
 (defun cora-test-compound (error-prelude)
   (when (not (zero? (- 204 (sum (map
-                                  (lambda (a) (* a a))
+                                  (fn (a) (* a a))
                                   (range (inc 8)))))))
     (error (concat error-prelude "error: compound test(s) failed"))))
 
@@ -37,7 +37,7 @@
   (assert-equal
     1157625
     (prod (filter 'odd? (map
-                          (lambda (a) (* a a a))
+                          (fn (a) (* a a a))
                           (range (dec 10)))))
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
@@ -51,7 +51,7 @@
   (assert-equal
     t
     (all? 'even? (map
-                   (lambda (a) (* 2 a))
+                   (fn (a) (* 2 a))
                    (range (inc 31))))
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
@@ -76,11 +76,11 @@
 (defun cora-test-function-composition (error-prelude)
   (when (not (equal? (thread 5
                        'sqrt
-                       (lambda (a) (- a 1))
-                       (lambda (a) (/ a 2)))
+                       (fn (a) (- a 1))
+                       (fn (a) (/ a 2)))
                      (call (pipe 'sqrt
-                                 (lambda (a) (- a 1))
-                                 (lambda (a) (/ a 2)))
+                                 (fn (a) (- a 1))
+                                 (fn (a) (/ a 2)))
                       5)))
     (error (concat error-prelude "error: function composition (1) test(s) failed"))))
 
@@ -88,10 +88,10 @@
 (defun cora-test-function-composition2 (error-prelude)
   (when (not= (thread 5
                 'sqrt
-                (lambda (a) (- a 1))
-                (lambda (a) (/ a 2)))
-              (call (compose (lambda (a) (/ a 2))
-                             (lambda (a) (- a 1))
+                (fn (a) (- a 1))
+                (fn (a) (/ a 2)))
+              (call (compose (fn (a) (/ a 2))
+                             (fn (a) (- a 1))
                              'sqrt)
                5))
     (error (concat error-prelude "error: function composition (2) test(s) failed"))))
@@ -109,8 +109,8 @@
 
 
 (defun cora-test-curry (error-prelude)
-  (letrec ((square (lambda (a) (* a a)))
-           (sum-squares (lambda (a b)
+  (letrec ((square (fn (a) (* a a)))
+           (sum-squares (fn (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))
     (assert-equal
@@ -120,8 +120,8 @@
 
 
 (defun cora-test-partial (error-prelude)
-  (letrec ((square (lambda (a) (* a a)))
-           (sum-squares (lambda (a b)
+  (letrec ((square (fn (a) (* a a)))
+           (sum-squares (fn (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))
     (assert-equal
@@ -133,13 +133,13 @@
 (defun cora-test-fold (error-prelude)
   (assert-equal
     204
-    (fold (lambda (acc a) (+ acc (* a a))) 0 (range (inc 8)))
+    (fold (fn (acc a) (+ acc (* a a))) 0 (range (inc 8)))
     (concat error-prelude "error: fold test(s) failed"))
   (let ((input "this is a test"))
     (assert-equal
       input
       (fold ; TODO add to unit tests (Cora)
-        (lambda (acc a)
+        (fn (acc a)
                (concat acc (join-chars (list a))))
         ""
         (string-to-list input))
@@ -185,7 +185,7 @@
 
 (defun cora-test-run-tests (&rest tests)
   (letrec ((prelude "cora-test ... ")
-           (execute-tests (lambda (fns)
+           (execute-tests (fn (fns)
                             (cond ((null fns) nil)
                                   (t (call (car fns) prelude)
                                      (call execute-tests (cdr fns)))))))

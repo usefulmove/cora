@@ -1,21 +1,21 @@
-;;; cora.el --- Cora programming language -*- lexical-binding: t; -*-
+;;; cora.el --- Cora functional programming -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2023 Duane Edmonds
 ;;
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 7, 2023
-;; Version: 0.2.10
+;; Modified: September 8, 2023
+;; Version: 0.2.11
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary: unit tests ~/repos/cora/src/cora-test.el
+;;; Commentary: Unit tests @ ~/repos/cora/src/cora-test.el
 ;;
-;;  Description: Cora programming language
+;;  Description: Cora functional programming
 ;;
 ;;; Code:
 
@@ -34,8 +34,8 @@
   `(not (= ,exp ,exp2)))
 
 ; call
-(defmacro call (fn &rest args)
-  `(funcall ,fn ,@args))
+(defmacro call (f &rest args)
+  `(funcall ,f ,@args))
 
 ; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
 (defmacro assert-equal (exp1 exp2 error-msg)
@@ -43,35 +43,62 @@
      (error ,error-msg)))
 
 ; map :: (T -> U) -> [T] -> [U]
-(defmacro map (fn lst)
-  `(mapcar ,fn ,lst))
+(defmacro map (f lst)
+  `(mapcar ,f ,lst))
 
 ; filter :: (T -> boolean) -> [T] -> [T]
-(defmacro filter (fn lst)
-  `(cl-remove-if-not ,fn ,lst))
+(defmacro filter (f lst)
+  `(cl-remove-if-not ,f ,lst))
 
 ; flatten :: [[T]] -> [T]
 (fset 'flatten '-flatten)
+
+(defmacro fn (&rest cdr)
+  "Return an anonymous function.
+Under dynamic binding, a call of the form (lambda ARGS DOCSTRING
+INTERACTIVE BODY) is self-quoting; the result of evaluating the
+lambda expression is the expression itself.  Under lexical
+binding, the result is a closure.  Regardless, the result is a
+function, i.e., it may be stored as the function value of a
+symbol, passed to `funcall' or `mapcar', etc.
+
+ARGS should take the same form as an argument list for a `defun'.
+DOCSTRING is an optional documentation string.
+ If present, it should describe how to call the function.
+ But documentation strings are usually not useful in nameless functions.
+INTERACTIVE should be a call to the function `interactive', which see.
+It may also be omitted.
+BODY should be a list of Lisp expressions.
+
+\(fn ARGS [DOCSTRING] [INTERACTIVE] BODY)"
+  (declare (doc-string 2) (indent defun)
+           (debug (&define lambda-list lambda-doc
+                           [&optional ("interactive" interactive)]
+                           def-body)))
+  ;; Note that this definition should not use backquotes; subr.el should not
+  ;; depend on backquote.el.
+  (list 'function (cons 'lambda cdr)))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
-(defun fold (fn acc lst)
-  "Fold (reduce) list LST using applied function FN starting with initial value
+(defun fold (f acc lst)
+  "Fold (reduce) list LST using applied function F starting with initial value
   ACC for the accumulator."
   (cond ((null lst) acc)
-        (t (fold fn (funcall fn acc (car lst)) (cdr lst)))))
+        (t (fold f (funcall f acc (car lst)) (cdr lst)))))
 
 
 ;; partial :: (... -> T -> U) -> [...] -> (T -> U)
 (defun partial (&rest args)
   "Return unary function when passed an n-ary function and (- n 1) arguments."
-  (let ((fn (car args))
+  (let ((f (car args))
         (fargs (cdr args)))
     (lambda (a)
-      (apply fn (append fargs (list a))))))
+      (apply f (append fargs (list a))))))
 
 
 ;; thread :: T -> [(T -> T)] -> T
@@ -100,15 +127,15 @@
 ;; pipe :: [(T -> T)] -> (T -> T)
 (defun pipe (&rest fns)
   "Create composed function constructed of function arguments FNS. The order
-  of function application is reversed from the compose function."
+of function application is reversed from the compose function."
   (apply 'compose (reverse fns)))
 
 
 ;; curry2 :: (T -> U -> V) -> (T -> (U -> V))
-(defun curry2 (fn)
-  "Return curried binary function FN."
+(defun curry2 (f)
+  "Return curried binary function F."
   (lambda (a)
-    (lambda (b) (funcall fn a b))))
+    (lambda (b) (funcall f a b))))
 
 
 ;; range :: number -> [number]
@@ -167,20 +194,20 @@
 
 
 ;; all? :: (T -> boolean) -> [T] -> boolean
-(defun all? (fn lst)
+(defun all? (f lst)
   "Check that function applied to all values in the list returns true."
   (cond ((null lst) t)
-        ((not (funcall fn (car lst))) nil)
-        (t (all? fn (cdr lst)))))
+        ((not (funcall f (car lst))) nil)
+        (t (all? f (cdr lst)))))
 
 
 ;; any? :: (T -> boolean) -> [T] -> boolean
-(defun any? (fn lst)
-  "Check that function (FN) applied to at least one value in the
+(defun any? (f lst)
+  "Check that function (F) applied to at least one value in the
   list LST returns true."
   (cond ((null lst) nil)
-        ((funcall fn (car lst)) t)
-        (t (any? fn (cdr lst)))))
+        ((funcall f (car lst)) t)
+        (t (any? f (cdr lst)))))
 
 
 ;; init :: [T] -> [T]
@@ -247,16 +274,18 @@
 
 
 ;; partition :: (T -> boolean) -> [T] -> [[T] [T]]
-(defun partition (fn lst)
+(defun partition (f lst)
   (fold
     (lambda (acc e)
-      (if (call fn e)
+      (if (call f e)
           (list (cons e (car acc)) ; match - add to first element of accumulator
                 (cadr acc))
           (list (car acc)
                 (cons e (cadr acc))))) ; no match - added to second element of accumulator
     '(() ())
     lst))
+
+
 
 
 
