@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.14
+;; Version: 0.2.15
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -174,17 +174,29 @@
     (zip '(3 1 2 5 4)
          '(0 1 2 3))
     '((3 0) (1 1) (2 2) (5 3))
-    (concat error-prelude "error: drop test(s) failed")))
+    (concat error-prelude "error: zip test(s) failed")))
 
 
 (defun cora-test-enumerate-partition (error-prelude)
   (assert-equal
     (enumerate '(3 1 2 5 4))
     '((0 3) (1 1) (2 2) (3 5) (4 4))
-    (concat error-prelude "error: drop test(s) failed"))
+    (concat error-prelude "error: enumerate test(s) failed"))
   (assert-equal
     (partition 'odd? '(8 1 2 0 3 5 4 6))
     '((5 3 1) (6 4 0 2 8))
+    (concat error-prelude "error: enumerate test(s) failed")))
+
+
+(defun cora-test-counter (error-prelude)
+  (assert-equal
+    (let ((s "As twilight cascaded upon the horizon, the iridescent hues of
+              amaranthine skies caressed the gentle whispers of the zephyr,
+              weaving an ephemeral symphony of love that intertwined the souls
+              of all living beings in the tender embrace of nature's eternal
+              harmony."))
+      (gethash ?z (counter (string-to-list s))))
+    2
     (concat error-prelude "error: drop test(s) failed")))
 
 
@@ -218,9 +230,8 @@
   'cora-test-fold
   'cora-test-drop-take
   'cora-test-zip
-  'cora-test-enumerate-partition)
-
-
+  'cora-test-enumerate-partition
+  'cora-test-counter)
 
 
 

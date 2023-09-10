@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.13
+;; Version: 0.2.14
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -297,6 +297,16 @@ of function application is reversed from the compose function."
     lst))
 
 
+;; counter :: [T] -> #(T -> integer)
+(defun counter (lst &optional map)
+  "Count elements in list LST and return a hash table with counts."
+  (setq counts (if map
+                   map
+                   (make-hash-table :test 'equal)))
+  (cond ((null lst) counts)
+        (t (let ()
+             (puthash (car lst) (+ 1 (gethash (car lst) counts 0)) counts) ; add first element to table
+             (counter (cdr lst) counts)))))
 
 
 
