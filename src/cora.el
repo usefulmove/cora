@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.14
+;; Version: 0.2.15
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -27,33 +27,40 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; macros
 
-; equal? :: sexp -> sexp -> boolean
+;; equal? :: sexp -> sexp -> boolean
 (defmacro equal? (exp exp2)
   `(equal ,exp ,exp2))
+
 
 ;; not= :: sexp -> sexp -> boolean
 (defmacro not= (exp exp2)
   `(not (= ,exp ,exp2)))
 
-; call
+
+;; call
 (defmacro call (f &rest args)
   `(funcall ,f ,@args))
 
-; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
+
+;; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
 (defmacro assert-equal (exp1 exp2 error-msg)
   `(when (not (equal ,exp1 ,exp2))
      (error ,error-msg)))
 
-; map :: (T -> U) -> [T] -> [U]
+
+;; map :: (T -> U) -> [T] -> [U]
 (defmacro map (f lst)
   `(mapcar ,f ,lst))
 
-; filter :: (T -> boolean) -> [T] -> [T]
+
+;; filter :: (T -> boolean) -> [T] -> [T]
 (defmacro filter (f lst)
   `(cl-remove-if-not ,f ,lst))
 
-; flatten :: [[T]] -> [T]
+
+;; flatten :: [[T]] -> [T]
 (fset 'flatten '-flatten)
+
 
 (defmacro fn (&rest cdr)
   "Return an anonymous function.
@@ -81,6 +88,10 @@ BODY should be a list of Lisp expressions.
   ;; depend on backquote.el.
   (list 'function (cons 'lambda cdr)))
 
+
+(defmacro do (&rest forms)
+  "Evaluate body FORMS sequentially and return value of the last one."
+  `(let () ,@forms))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -26,7 +26,6 @@
 (require 'cora)
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; test definitions
 
@@ -141,7 +140,7 @@
     (concat error-prelude "error: fold test(s) failed"))
   (let ((input "this is a test"))
     (assert-equal
-      (fold ; TODO add to unit tests (Cora)
+      (fold
         (fn (acc a)
                (concat acc (join-chars (list a))))
         ""
@@ -200,6 +199,16 @@
     (concat error-prelude "error: drop test(s) failed")))
 
 
+(defun cora-test-do (error-prelude)
+  (assert-equal
+    (let ((cnt 0))
+      (do (setq cnt (inc cnt))
+          (setq cnt (inc cnt))
+          (setq cnt (inc cnt)))
+      cnt)
+    3
+    (concat error-prelude "error: do test(s) failed")))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run unit tests
@@ -228,8 +237,8 @@
   'cora-test-drop-take
   'cora-test-zip
   'cora-test-enumerate-partition
-  'cora-test-counter)
-
+  'cora-test-counter
+  'cora-test-do)
 
 
 (provide 'cora-test)
