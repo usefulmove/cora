@@ -99,7 +99,7 @@ BODY should be a list of Lisp expressions.
 
 ;; fold :: (U -> T -> U) -> U -> [T] -> U
 (defun fold (f acc lst)
-  "Fold (reduce) list LST using applied function F starting with initial value
+  "Fold (reduce) list (LST) using applied function F starting with initial value
   ACC for the accumulator."
   (cond ((null lst) acc)
         (t (fold f (funcall f acc (car lst)) (cdr lst)))))
@@ -117,7 +117,7 @@ BODY should be a list of Lisp expressions.
 ;; thread :: T -> [(T -> T)] -> T
 (defun thread (seed &rest fns)
   "Thread a SEED value through the function defined by the composition of the
-list of functions FNS. This higher-order function can simplify (and make more
+list of functions (FNS). This higher-order function can simplify (and make more
 expressive) deeply nested compositional patterns."
   (cond ((null fns) seed)
         (t (apply 'thread (cons (funcall (car fns) seed)
@@ -126,7 +126,7 @@ expressive) deeply nested compositional patterns."
 
 ;; compose :: [(T -> T)] -> (T -> T)
 (defun compose (&rest fns)
-  "Create composed function constructed of function arguments FNS."
+  "Create composed function constructed of function arguments (FNS)."
   (cond ((null fns) 'identity)
         (t (let ((last-fn (car fns))
                  (rest-fn (apply 'compose (cdr fns))))
@@ -136,7 +136,7 @@ expressive) deeply nested compositional patterns."
 
 ;; pipe :: [(T -> T)] -> (T -> T)
 (defun pipe (&rest fns)
-  "Create composed function constructed of function arguments FNS. The order
+  "Create composed function constructed of function arguments (FNS). The order
 of function application is reversed from the compose function."
   (apply 'compose (reverse fns)))
 
@@ -193,13 +193,13 @@ of function application is reversed from the compose function."
 
 ;; sum :: [T] -> T
 (defun sum (lst)
-  "Sum elements of list LST."
+  "Sum elements of list (LST)."
   (apply '+ lst))
 
 
 ;; prod :: [T] -> T
 (defun prod (lst)
-  "Calculate the product of elements of list LST."
+  "Calculate the product of elements of list (LST)."
   (apply '* lst))
 
 
@@ -214,7 +214,7 @@ of function application is reversed from the compose function."
 ;; any? :: (T -> boolean) -> [T] -> boolean
 (defun any? (f lst)
   "Check that function (F) applied to at least one value in the
-  list LST returns true."
+  list (LST) returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
         (t (any? f (cdr lst)))))
@@ -222,25 +222,25 @@ of function application is reversed from the compose function."
 
 ;; init :: [T] -> [T]
 (defun init (lst)
-  "Return all elements of list LST except first."
+  "Return all elements of list (LST) except first."
   (reverse (cdr (reverse lst))))
 
 
 ;; end :: [T] -> [T]
 (defun end (lst)
-  "Return the last element of the list LST."
+  "Return the last element of the list (LST)."
   (car (reverse lst)))
 
 
 ;; join-chars :: [char] -> string
 (defun join-chars (chars)
-  "Join the elements of list of characters CHARS into a string."
+  "Join the elements of list of characters (CHARS) into a string."
   (apply 'string chars))
 
 
 ;; gcd :: int -> int -> ... -> int (n-ary)
 (defun gcd (&rest args)
-  "Calculate the greatest common denominator of ARGS."
+  "Calculate the greatest common denominator of number arguments (ARGS)."
   (cl-labels ((gcd (a b)
                    (cond ((= 0 b) a)
                          (t (gcd b (mod a b))))))
@@ -253,7 +253,7 @@ of function application is reversed from the compose function."
 
 ;; take :: int -> [T] -> [T]
 (defun take (n lst)
-  "Take first N elements from list LST."
+  "Take first N elements from list (LST)."
   (cond ((null lst) '())
         ((= 0 n) '())
         (t (cons (car lst) (take (- n 1) (cdr lst))))))
@@ -261,13 +261,13 @@ of function application is reversed from the compose function."
 
 ;; takebut :: int -> [T] -> [T]
 (defun takebut (n lst)
-  "Take all but last N elements from list LST."
+  "Take all but last N elements from list (LST)."
   (take (- (length lst) n) lst))
 
 
 ;; drop :: int -> [T] -> [T]
 (defun drop (n lst)
-  "Drop first N elements from list LST."
+  "Drop first N elements from list (LST)."
   (cond ((null lst) '())
         ((= 0 n) lst)
         (t (drop (- n 1) (cdr lst)))))
@@ -275,7 +275,7 @@ of function application is reversed from the compose function."
 
 ;; dropbut :: int -> [T] -> [T]
 (defun dropbut (n lst)
-  "Drop all but last N elements from list LST."
+  "Drop all but last N elements from list (LST)."
   (drop (- (length lst) n) lst))
 
 
@@ -310,14 +310,13 @@ of function application is reversed from the compose function."
 
 ;; counter :: [T] -> #(T -> integer)
 (defun counter (lst &optional map)
-  "Count elements in list LST and return a hash table with counts."
-  (setq counts (if map
-                   map
+  "Count elements in list (LST) and return a hash table with counts."
+  (setq counts (if map map
                    (make-hash-table :test 'equal)))
-  (cond ((null lst) counts)
-        (t (let ()
-             (puthash (car lst) (+ 1 (gethash (car lst) counts 0)) counts) ; add first element to table
-             (counter (cdr lst) counts)))))
+  (if (null lst) counts
+      (do
+        (puthash (car lst) (+ 1 (gethash (car lst) counts 0)) counts) ; add first element to table
+        (counter (cdr lst) counts)))) ; recursively run on rest of list (tail recursion)
 
 
 
