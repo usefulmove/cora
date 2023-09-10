@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 9, 2023
-;; Version: 0.2.15
+;; Version: 0.2.16
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -195,12 +195,9 @@
               weaving an ephemeral symphony of love that intertwined the souls
               of all living beings in the tender embrace of nature's eternal
               harmony."))
-      (gethash ?z (counter (string-to-list s))))
-    2
+      (gethash ?e (counter (string-to-list s))))
+    33
     (concat error-prelude "error: drop test(s) failed")))
-
-
-
 
 
 
