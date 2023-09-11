@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 10, 2023
-;; Version: 0.2.16
+;; Version: 0.2.17
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -187,7 +187,7 @@ of function application is reversed from the compose function."
 ;; any? :: (T -> boolean) -> [T] -> boolean
 (defun any? (f lst)
   "Check that function (F) applied to at least one value in the
-  list (LST) returns true."
+list (LST) returns true."
   (cond ((null lst) nil)
         ((funcall f (car lst)) t)
         (t (any? f (cdr lst)))))
@@ -254,6 +254,10 @@ of function application is reversed from the compose function."
 
 ;; zip :: [T] -> [U] -> [[T U]]
 (defun zip (lst1 lst2)
+  "Zip two lists (LST1) and (LST2) together and return a list of lists in which
+the first element comes from LST1 and the second element comes from LST2. The
+resulting zipped list will have the same length as the shortest of the two
+lists provided."
   (cond ((or (null lst1)
              (null lst2)) '())
         (t (cons (list (car lst1)
@@ -264,12 +268,18 @@ of function application is reversed from the compose function."
 
 ;; enumerate :: [T] -> [[integer T]]
 (defun enumerate (lst)
+  "Enumerate the list (LST) by returning a list whose elements are the element
+number (0-based) and the element itself."
   (zip (range (length lst))
        lst))
 
 
 ;; partition :: (T -> boolean) -> [T] -> [[T] [T]]
 (defun partition (f lst)
+  "Partition list (LST) into two lists using predicate function (F). The return
+value is a list of lists with the first element is the list of elements for
+which F returns t (true), and the second element is the list of elements for
+which F returns nil (false)."
   (fold
     (lambda (acc e)
       (if (call f e)
