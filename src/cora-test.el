@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 9, 2023
-;; Version: 0.2.16
+;; Modified: September 10, 2023
+;; Version: 0.2.17
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -31,7 +31,7 @@
 
 (defun cora-test-compound (error-prelude)
   (when (not (zero? (- 204 (sum (map
-                                  (fn (a) (* a a))
+                                  (lambda (a) (* a a))
                                   (range (inc 8)))))))
     (error (concat error-prelude "error: compound test(s) failed"))))
 
@@ -39,7 +39,7 @@
 (defun cora-test-compound2 (error-prelude)
   (assert-equal
     (prod (filter 'odd? (map
-                          (fn (a) (* a a a))
+                          (lambda (a) (* a a a))
                           (range (dec 10)))))
     1157625
     (concat error-prelude "error: compound2 test(s) failed"))
@@ -53,7 +53,7 @@
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
     (all? 'even? (map
-                   (fn (a) (* 2 a))
+                   (lambda (a) (* 2 a))
                    (range (inc 31))))
     t
     (concat error-prelude "error: compound2 test(s) failed"))
@@ -79,11 +79,11 @@
 (defun cora-test-function-composition (error-prelude)
   (when (not (equal? (thread 5
                        'sqrt
-                       (fn (a) (- a 1))
-                       (fn (a) (/ a 2)))
+                       (lambda (a) (- a 1))
+                       (lambda (a) (/ a 2)))
                      (call (pipe 'sqrt
-                                 (fn (a) (- a 1))
-                                 (fn (a) (/ a 2)))
+                                 (lambda (a) (- a 1))
+                                 (lambda (a) (/ a 2)))
                       5)))
     (error (concat error-prelude "error: function composition (1) test(s) failed"))))
 
@@ -91,10 +91,10 @@
 (defun cora-test-function-composition2 (error-prelude)
   (when (not= (thread 5
                 'sqrt
-                (fn (a) (- a 1))
-                (fn (a) (/ a 2)))
-              (call (compose (fn (a) (/ a 2))
-                             (fn (a) (- a 1))
+                (lambda (a) (- a 1))
+                (lambda (a) (/ a 2)))
+              (call (compose (lambda (a) (/ a 2))
+                             (lambda (a) (- a 1))
                              'sqrt)
                5))
     (error (concat error-prelude "error: function composition (2) test(s) failed"))))
@@ -112,8 +112,8 @@
 
 
 (defun cora-test-curry (error-prelude)
-  (letrec ((square (fn (a) (* a a)))
-           (sum-squares (fn (a b)
+  (letrec ((square (lambda (a) (* a a)))
+           (sum-squares (lambda (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))
     (assert-equal
@@ -123,8 +123,8 @@
 
 
 (defun cora-test-partial (error-prelude)
-  (letrec ((square (fn (a) (* a a)))
-           (sum-squares (fn (a b)
+  (letrec ((square (lambda (a) (* a a)))
+           (sum-squares (lambda (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))
     (assert-equal
@@ -135,13 +135,13 @@
 
 (defun cora-test-fold (error-prelude)
   (assert-equal
-    (fold (fn (acc a) (+ acc (* a a))) 0 (range (inc 8)))
+    (fold (lambda (acc a) (+ acc (* a a))) 0 (range (inc 8)))
     204
     (concat error-prelude "error: fold test(s) failed"))
   (let ((input "this is a test"))
     (assert-equal
       (fold
-        (fn (acc a)
+        (lambda (acc a)
                (concat acc (join-chars (list a))))
         ""
         (string-to-list input))
@@ -215,7 +215,7 @@
 
 (defun cora-test-run-tests (&rest tests)
   (letrec ((prelude "cora-test ... ")
-           (execute-tests (fn (fns)
+           (execute-tests (lambda (fns)
                             (cond ((null fns) nil)
                                   (t (call (car fns) prelude)
                                      (call execute-tests (cdr fns)))))))

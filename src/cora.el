@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 9, 2023
-;; Version: 0.2.15
+;; Modified: September 10, 2023
+;; Version: 0.2.16
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -60,33 +60,6 @@
 
 ;; flatten :: [[T]] -> [T]
 (fset 'flatten '-flatten)
-
-
-(defmacro fn (&rest cdr)
-  "Return an anonymous function.
-Under dynamic binding, a call of the form (lambda ARGS DOCSTRING
-INTERACTIVE BODY) is self-quoting; the result of evaluating the
-lambda expression is the expression itself.  Under lexical
-binding, the result is a closure.  Regardless, the result is a
-function, i.e., it may be stored as the function value of a
-symbol, passed to `funcall' or `mapcar', etc.
-
-ARGS should take the same form as an argument list for a `defun'.
-DOCSTRING is an optional documentation string.
- If present, it should describe how to call the function.
- But documentation strings are usually not useful in nameless functions.
-INTERACTIVE should be a call to the function `interactive', which see.
-It may also be omitted.
-BODY should be a list of Lisp expressions.
-
-\(fn ARGS [DOCSTRING] [INTERACTIVE] BODY)"
-  (declare (doc-string 2) (indent defun)
-           (debug (&define lambda-list lambda-doc
-                           [&optional ("interactive" interactive)]
-                           def-body)))
-  ;; Note that this definition should not use backquotes; subr.el should not
-  ;; depend on backquote.el.
-  (list 'function (cons 'lambda cdr)))
 
 
 (defmacro do (&rest forms)
