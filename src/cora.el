@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 10, 2023
-;; Version: 0.2.17
+;; Version: 0.2.18
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -26,6 +26,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; macros
+
 
 ;; equal? :: sexp -> sexp -> boolean
 (defmacro equal? (exp exp2)
@@ -62,9 +63,16 @@
 (fset 'flatten '-flatten)
 
 
+;; do
 (defmacro do (&rest forms)
   "Evaluate body FORMS sequentially and return value of the last one."
   `(let () ,@forms))
+
+
+;; _
+(defmacro _ (exp)
+  "Unary anonymous function shorthand macro."
+  `(lambda (%) ,exp))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
