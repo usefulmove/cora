@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 10, 2023
-;; Version: 0.2.18
+;; Modified: September 12, 2023
+;; Version: 0.2.19
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -77,14 +77,14 @@
 
 
 (defun cora-test-function-composition (error-prelude)
-  (when (not (equal? (thread 5
-                       'sqrt
-                       (_ (- % 1))
-                       (_ (/ % 2)))
-                     (call (pipe 'sqrt
-                                 (_ (- % 1))
-                                 (_ (/ % 2)))
-                      5)))
+  (when (not-equal? (thread 5
+                      'sqrt
+                      (_ (- % 1))
+                      (_ (/ % 2)))
+                    (call (pipe 'sqrt
+                                (_ (- % 1))
+                                (_ (/ % 2)))
+                     5))
     (error (concat error-prelude "error: function composition (1) test(s) failed"))))
 
 
@@ -210,6 +210,27 @@
     (concat error-prelude "error: do test(s) failed")))
 
 
+(defun cora-test-equality (error-prelude)
+  (assert-equal
+    (not= 1 1.0 1) ; nil
+    (eq? 1 1.0) ; nil
+    (concat error-prelude "error: equality test(s) failed"))
+  (assert-equal
+    (not-eq? 1 1.0) ; t
+    (not-equal? 1 1.0) ; t
+    (concat error-prelude "error: equality test(s) failed"))
+  (let ((a "eight")
+        (b "eight"))
+    (assert-equal
+      (equal? a b) ; t
+      (not-eq? a b) ; t
+      (concat error-prelude "error: equality test(s) failed")))
+  (assert-equal
+    (not= 1 1.0) ; nil
+    (not-equal? 1 1) ; nil
+    (concat error-prelude "error: equality test(s) failed")))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run unit tests
 
@@ -238,7 +259,8 @@
   'cora-test-zip
   'cora-test-enumerate-partition
   'cora-test-counter
-  'cora-test-do)
+  'cora-test-do
+  'cora-test-equality)
 
 
 (provide 'cora-test)

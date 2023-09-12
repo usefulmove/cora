@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 11, 2023
-;; Version: 0.2.18
+;; Modified: September 12, 2023
+;; Version: 0.2.19
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -28,14 +28,34 @@
 ;; macros
 
 
-;; equal? :: sexp -> sexp -> boolean
-(defmacro equal? (exp exp2)
-  `(equal ,exp ,exp2))
+;; not= :: T -> U -> V -> ... -> boolean
+(defmacro not= (&rest args)
+  "Test that objects are not numerically equal."
+  `(not (= ,@args)))
 
 
-;; not= :: sexp -> sexp -> boolean
-(defmacro not= (exp exp2)
-  `(not (= ,exp ,exp2)))
+;; equal? :: T -> U -> boolean
+(defmacro equal? (a b)
+  "Test that objects A and B have equal components."
+  `(equal ,a ,b))
+
+
+;; not-equal? :: T -> U -> boolean
+(defmacro not-equal? (a b)
+  "Test that objects A and B do not have equal components."
+  `(not (equal? ,a ,b)))
+
+
+;; eq? :: T -> U -> boolean
+(defmacro eq? (a b)
+  "Test that objects A and B are the same object."
+  `(eq ,a ,b))
+
+
+;; not-eq? :: T -> U -> boolean
+(defmacro not-eq? (a b)
+  "Test that objects A and B are not the same object."
+  `(not (eq ,a ,b)))
 
 
 ;; call
@@ -46,7 +66,7 @@
 ;; assert-equal :: sexp -> sexp -> string -> nil (IMPURE)
 (defmacro assert-equal (exp1 exp2 error-msg)
   `(when (not (equal ,exp1 ,exp2))
-     (error ,error-msg)))
+  (error ,error-msg)))
 
 
 ;; map :: (T -> U) -> [T] -> [U]
@@ -110,9 +130,9 @@ expressive) deeply nested compositional patterns."
   "Create composed function constructed of function arguments (FNS)."
   (cond ((null fns) 'identity)
         (t (let ((last-fn (car fns))
-                 (rest-fn (apply 'compose (cdr fns))))
-             (lambda (seed)
-               (funcall last-fn (funcall rest-fn seed)))))))
+                        (rest-fn (apply 'compose (cdr fns))))
+                (lambda (seed)
+                (funcall last-fn (funcall rest-fn seed)))))))
 
 
 ;; pipe :: [(T -> T)] -> (T -> T)
@@ -223,13 +243,13 @@ list (LST) returns true."
 (defun gcd (&rest args)
   "Calculate the greatest common denominator of number arguments (ARGS)."
   (cl-labels ((gcd (a b)
-                   (cond ((= 0 b) a)
-                         (t (gcd b (mod a b))))))
+                  (cond ((= 0 b) a)
+                          (t (gcd b (mod a b))))))
     (cond ((= 2 (length args)) (gcd (car args)
                                     (cadr args)))
           (t (apply 'gcd (cons (gcd (car args)
-                                     (cadr args))
-                                (cddr args)))))))
+                                    (cadr args))
+                               (cddr args)))))))
 
 
 ;; take :: int -> [T] -> [T]
@@ -237,7 +257,8 @@ list (LST) returns true."
   "Take first N elements from list (LST)."
   (cond ((null lst) '())
         ((= 0 n) '())
-        (t (cons (car lst) (take (- n 1) (cdr lst))))))
+        (t (cons (car lst)
+                 (take (- n 1) (cdr lst))))))
 
 
 ;; takebut :: int -> [T] -> [T]
