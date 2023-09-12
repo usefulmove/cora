@@ -5,7 +5,7 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 10, 2023
+;; Modified: September 11, 2023
 ;; Version: 0.2.18
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
@@ -306,7 +306,10 @@ which F returns nil (false)."
                    (make-hash-table :test 'equal)))
   (if (null lst) counts
       (do
-        (puthash (car lst) (+ 1 (gethash (car lst) counts 0)) counts) ; add first element to table
+        (puthash ; add first element to table
+          (car lst)
+          (+ 1 (gethash (car lst) counts 0))
+          counts)
         (counter (cdr lst) counts)))) ; recursively run on rest of list (tail recursion)
 
 
