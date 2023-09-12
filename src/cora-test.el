@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 12, 2023
-;; Version: 0.2.19
+;; Version: 0.2.20
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -101,6 +101,14 @@
 
 
 (defun cora-test-string-join (error-prelude)
+  (assert-equal
+    (join '("3" "1" "2" "5" "4"))
+    "31254"
+    (concat error-prelude "error: string join test(s) failed"))
+  (assert-equal
+    (join '("3" "1" "2" "5" "4") ", ")
+    "3, 1, 2, 5, 4"
+    (concat error-prelude "error: string join test(s) failed"))
   (let ((s "desafortunadamente"))
     (assert-equal
       (thread s
@@ -261,6 +269,7 @@
   'cora-test-counter
   'cora-test-do
   'cora-test-equality)
+
 
 
 (provide 'cora-test)

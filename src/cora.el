@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 12, 2023
-;; Version: 0.2.19
+;; Version: 0.2.20
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -332,6 +332,17 @@ which F returns nil (false)."
           (+ 1 (gethash (car lst) counts 0))
           counts)
         (counter (cdr lst) counts)))) ; recursively run on rest of list (tail recursion)
+
+
+;; join :: [string] -> (optional) string -> string
+(defun join (lst &optional sep)
+  "Concatenate the list of strings (LST) into one using the provided
+separator (SEP)."
+  (fold
+    (lambda (acc s)
+      (concat acc sep s))
+    (car lst)
+    (cdr lst)))
 
 
 
