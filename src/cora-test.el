@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 12, 2023
-;; Version: 0.2.21
+;; Modified: September 13, 2023
+;; Version: 0.2.22
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -33,6 +33,10 @@
   (when (not (zero? (- 204 (sum (map
                                   (_ (* % %))
                                   (range (inc 8)))))))
+    (error (concat error-prelude "error: compound test(s) failed")))
+  (assert-equal
+    (call (cache 'inc) 8)
+    9
     (error (concat error-prelude "error: compound test(s) failed"))))
 
 
