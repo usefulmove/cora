@@ -195,7 +195,7 @@
     (concat error-prelude "error: enumerate test(s) failed")))
 
 
-(defun cora-test-counter (error-prelude)
+(defun cora-test-tally (error-prelude)
   (assert-equal
     (let ((s "As twilight cascaded upon the horizon, the iridescent hues of
               amaranthine skies caressed the gentle whispers of the zephyr,
@@ -204,7 +204,7 @@
               harmony.")
           (get-count (lambda (key counts)
                        (cdr (assoc key counts)))))
-      (call get-count ?e (counter (string-to-list s))))
+      (call get-count ?e (tally (string-to-list s))))
     33
     (concat error-prelude "error: drop test(s) failed")))
 
@@ -268,7 +268,7 @@
   'cora-test-drop-take
   'cora-test-zip
   'cora-test-enumerate-partition
-  'cora-test-counter
+  'cora-test-tally
   'cora-test-do
   'cora-test-equality)
 

@@ -320,8 +320,8 @@ which F returns nil (false)."
     lst))
 
 
-;; counter :: [T] -> [T . integer]
-(defun counter (lst &optional map)
+;; tally :: [T] -> [T . integer]
+(defun tally (lst &optional map)
   "Count elements in list (LST) and return an association list with
 key-count pairs."
   (setq counts-hash (if map map
@@ -333,10 +333,10 @@ key-count pairs."
           (car lst)
           (+ 1 (gethash (car lst) counts-hash 0))
           counts-hash)
-        (counter (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
+        (tally (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
 
   (let (counts '())
-    (maphash ; convert hash table to list
+    (maphash ; convert hash table to association list
       (lambda (key value)
         (setq counts (cons (cons key value) counts)))
       counts-hash)
