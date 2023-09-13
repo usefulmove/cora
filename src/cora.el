@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 12, 2023
-;; Version: 0.2.20
+;; Version: 0.2.21
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -320,18 +320,27 @@ which F returns nil (false)."
     lst))
 
 
-;; counter :: [T] -> #(T -> integer)
+;; counter :: [T] -> [T . integer]
 (defun counter (lst &optional map)
-  "Count elements in list (LST) and return a hash table with counts."
-  (setq counts (if map map
+  "Count elements in list (LST) and return an association list with
+key-count pairs."
+  (setq counts-hash (if map map
                    (make-hash-table :test 'equal)))
-  (if (null lst) counts
+
+  (if (null lst) counts-hash
       (do
         (puthash ; add first element to table
           (car lst)
-          (+ 1 (gethash (car lst) counts 0))
-          counts)
-        (counter (cdr lst) counts)))) ; recursively run on rest of list (tail recursion)
+          (+ 1 (gethash (car lst) counts-hash 0))
+          counts-hash)
+        (counter (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
+
+  (let (counts '())
+    (maphash ; convert hash table to list
+      (lambda (key value)
+        (setq counts (cons (cons key value) counts)))
+      counts-hash)
+    counts))
 
 
 ;; join :: [string] -> (optional) string -> string

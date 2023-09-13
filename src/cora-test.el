@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 12, 2023
-;; Version: 0.2.20
+;; Version: 0.2.21
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -201,8 +201,10 @@
               amaranthine skies caressed the gentle whispers of the zephyr,
               weaving an ephemeral symphony of love that intertwined the souls
               of all living beings in the tender embrace of nature's eternal
-              harmony."))
-      (gethash ?e (counter (string-to-list s))))
+              harmony.")
+          (get-count (lambda (key counts)
+                       (cdr (assoc key counts)))))
+      (call get-count ?e (counter (string-to-list s))))
     33
     (concat error-prelude "error: drop test(s) failed")))
 
