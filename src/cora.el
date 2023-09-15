@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 13, 2023
-;; Version: 0.2.22
+;; Modified: September 15, 2023
+;; Version: 0.2.23
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -149,12 +149,17 @@ of function application is reversed from the compose function."
     (lambda (b) (funcall f a b))))
 
 
-;; range :: number -> [number]
-(defun range (n)
-  "Generate a list of values from 0 to (- N 1)."
-  (cond ((= 0 n) '())
-        (t (append (range (- n 1))
-                   (list (- n 1))))))
+;; range :: number -> (optional) number -> [number]
+(defun range (&rest args)
+  "Generate a list of values from FROM (inclusive) to TO (non-inclusive)."
+  (let ((from (if (= 1 (length args))
+                  0
+                  (car args)))
+        (to (if (= 1 (length args))
+                (car args)
+                (cadr args))))
+    (cond ((= from to) '())
+          (t (cons from (range (inc from) to))))))
 
 
 ;; inc :: number -> number

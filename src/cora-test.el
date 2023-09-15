@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 13, 2023
-;; Version: 0.2.22
+;; Modified: September 15, 2023
+;; Version: 0.2.23
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -37,6 +37,10 @@
   (assert-equal
     (call (cache 'inc) 8)
     9
+    (error (concat error-prelude "error: compound test(s) failed")))
+  (assert-equal
+    (range 1 3)
+    '(1 2)
     (error (concat error-prelude "error: compound test(s) failed"))))
 
 
