@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 16, 2023
-;; Version: 0.2.27
+;; Version: 0.2.28
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -31,7 +31,7 @@
 
 (defun cora-test-compound (error-prelude)
   (when (not (zero? (- 204 (sum (map
-                                  (_ (* % %))
+                                  (\ (a) (* a a))
                                   (range (inc 8)))))))
     (error (concat error-prelude "error: compound test(s) failed")))
   (assert-equal
@@ -47,7 +47,7 @@
 (defun cora-test-compound2 (error-prelude)
   (assert-equal
     (prod (filter 'odd? (map
-                          (_ (* % % %))
+                          (\ (a) (* a a a))
                           (range (dec 10)))))
     1157625
     (concat error-prelude "error: compound2 test(s) failed"))
@@ -61,7 +61,7 @@
     (concat error-prelude "error: compound2 test(s) failed"))
   (assert-equal
     (all? 'even? (map
-                   (_ (* 2 %))
+                   (\ (a) (* 2 a))
                    (range (inc 31))))
     t
     (concat error-prelude "error: compound2 test(s) failed"))
@@ -87,11 +87,11 @@
 (defun cora-test-function-composition (error-prelude)
   (when (not-equal? (thread 5
                       'sqrt
-                      (_ (- % 1))
-                      (_ (/ % 2)))
+                      (\ (a) (- a 1))
+                      (\ (a) (/ a 2)))
                     (call (pipe 'sqrt
-                                (_ (- % 1))
-                                (_ (/ % 2)))
+                                (\ (a) (- a 1))
+                                (\ (a) (/ a 2)))
                      5))
     (error (concat error-prelude "error: function composition (1) test(s) failed"))))
 
@@ -99,10 +99,10 @@
 (defun cora-test-function-composition2 (error-prelude)
   (when (not= (thread 5
                 'sqrt
-                (_ (- % 1))
-                (_ (/ % 2)))
-              (call (compose (_ (/ % 2))
-                             (_ (- % 1))
+                (\ (a) (- a 1))
+                (\ (a) (/ a 2)))
+              (call (compose (\ (a) (/ a 2))
+                             (\ (a) (- a 1))
                              'sqrt)
                5))
     (error (concat error-prelude "error: function composition (2) test(s) failed"))))
@@ -128,7 +128,7 @@
 
 
 (defun cora-test-curry (error-prelude)
-  (letrec ((square (_ (* % %)))
+  (letrec ((square (\ (a) (* a a)))
            (sum-squares (lambda (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))
@@ -139,7 +139,7 @@
 
 
 (defun cora-test-partial (error-prelude)
-  (letrec ((square (_ (* % %)))
+  (letrec ((square (\ (a) (* a a)))
            (sum-squares (lambda (a b)
                           (sqrt (+ (call square a)
                                    (call square b))))))

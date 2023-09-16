@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 16, 2023
-;; Version: 0.2.26
+;; Version: 0.2.27
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -89,10 +89,10 @@
   `(let () ,@forms))
 
 
-;; _
-(defmacro _ (exp)
-  "Unary anonymous function shorthand macro."
-  `(lambda (%) ,exp))
+;; \
+(defmacro \ (bindings &rest body)
+  "Anonymous function shorthand."
+  `(lambda ,bindings ,@body))
 
 
 ;; for-comp
