@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 16, 2023
-;; Version: 0.2.25
+;; Version: 0.2.26
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -95,9 +95,18 @@
   `(lambda (%) ,exp))
 
 
-;; for :: symbol -> [T] -> expression -> [U]
-(defmacro for (sym lst exp)
-  `(map (lambda (,sym) ,exp) ,lst))
+;; for-comp
+(defmacro for-comp (bindings &rest body)
+  "For comprehension. Bind variables and iterate over body to return list of
+mapped results."
+  (let ((current-binding (car bindings))
+        (remaining-bindings (cdr bindings)))
+    (if (null remaining-bindings)
+        `(mapcar (lambda ,(list (car current-binding)) ,@body) ,(cadr current-binding))
+        `(cl-mapcan
+           (lambda ,(list (car current-binding))
+             (for-comp ,remaining-bindings ,@body))
+           ,(cadr current-binding)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 16, 2023
-;; Version: 0.2.26
+;; Version: 0.2.27
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -228,18 +228,24 @@
     (concat error-prelude "error: do test(s) failed")))
 
 
-(defun cora-test-for (error-prelude)
+(defun cora-test-for-comprehension (error-prelude)
   (assert-equal
-    (for a (range (inc 8)) (* a a a))
+    (for-comp ((a (range (inc 8)))) (* a a a))
     '(0 1 8 27 64 125 216 343 512)
-    (concat error-prelude "error: for test(s) failed"))
+    (concat error-prelude "error: for comprehension test(s) failed"))
   (assert-equal
-    (for pair (enumerate '(3 1 2))
+    (for-comp ((pair (enumerate '(3 1 2))))
       (let ((i (car pair))
             (a (cdr pair)))
         (* i (* a a))))
     '(0 1 8)
-    (concat error-prelude "error: for test(s) failed")))
+    (concat error-prelude "error: for comprehension test(s) failed"))
+  (assert-equal
+    (for-comp ((i (range 3))
+               (j (range 3)))
+      (cons i j))
+    '((0 . 0) (0 . 1) (0 . 2) (1 . 0) (1 . 1) (1 . 2) (2 . 0) (2 . 1) (2 . 2))
+    (concat error-prelude "error: for comprehension test(s) failed")))
 
 
 (defun cora-test-equality (error-prelude)
@@ -292,7 +298,7 @@
   'cora-test-enumerate-partition
   'cora-test-tally
   'cora-test-do
-  'cora-test-for
+  'cora-test-for-comprehension
   'cora-test-equality)
 
 
