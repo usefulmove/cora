@@ -97,16 +97,16 @@
 
 ;; for-comp
 (defmacro for-comp (bindings &rest body)
-  "For comprehension. Bind variables and iterate over body to return list of
-mapped results."
+  "Comprehension. Bind variables in BINDINGS and iterate BODY over binding
+permutations to generate list of mapped results."
   (let ((current-binding (car bindings))
         (remaining-bindings (cdr bindings)))
     (if (null remaining-bindings)
         `(mapcar (lambda ,(list (car current-binding)) ,@body) ,(cadr current-binding))
         `(cl-mapcan
-           (lambda ,(list (car current-binding))
-             (for-comp ,remaining-bindings ,@body))
-           ,(cadr current-binding)))))
+          (lambda ,(list (car current-binding))
+            (for-comp ,remaining-bindings ,@body))
+          ,(cadr current-binding)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
