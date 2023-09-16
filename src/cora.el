@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 15, 2023
-;; Version: 0.2.23
+;; Modified: September 16, 2023
+;; Version: 0.2.25
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -93,6 +93,11 @@
 (defmacro _ (exp)
   "Unary anonymous function shorthand macro."
   `(lambda (%) ,exp))
+
+
+;; for :: symbol -> [T] -> expression -> [U]
+(defmacro for (sym lst exp)
+  `(map (lambda (,sym) ,exp) ,lst))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -286,24 +291,24 @@ list (LST) returns true."
   (drop (- (length lst) n) lst))
 
 
-;; zip :: [T] -> [U] -> [[T U]]
+;; zip :: [T] -> [U] -> [[T . U]]
 (defun zip (lst1 lst2)
-  "Zip two lists (LST1) and (LST2) together and return a list of lists in which
-the first element comes from LST1 and the second element comes from LST2. The
-resulting zipped list will have the same length as the shortest of the two
-lists provided."
+  "Zip two lists (LST1) and (LST2) together and return an association list in
+which the first element comes from LST1 and the second element comes from LST2.
+The resulting zipped association list will have the same length as the shortest
+of the two provided lists."
   (cond ((or (null lst1)
              (null lst2)) '())
-        (t (cons (list (car lst1)
+        (t (cons (cons (car lst1)
                        (car lst2))
                  (zip (cdr lst1)
                       (cdr lst2))))))
 
 
-;; enumerate :: [T] -> [[integer T]]
+;; enumerate :: [T] -> [[integer . T]]
 (defun enumerate (lst)
-  "Enumerate the list (LST) by returning a list whose elements are the element
-number (0-based) and the element itself."
+  "Enumerate the list (LST) by returning an association list whose elements are
+the element index (0-based) and the element itself."
   (zip (range (length lst))
        lst))
 

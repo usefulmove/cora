@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 15, 2023
-;; Version: 0.2.23
+;; Modified: September 16, 2023
+;; Version: 0.2.25
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -188,14 +188,14 @@
   (assert-equal
     (zip '(3 1 2 5 4)
          '(0 1 2 3))
-    '((3 0) (1 1) (2 2) (5 3))
+    '((3 . 0) (1 . 1) (2 . 2) (5 . 3))
     (concat error-prelude "error: zip test(s) failed")))
 
 
 (defun cora-test-enumerate-partition (error-prelude)
   (assert-equal
     (enumerate '(3 1 2 5 4))
-    '((0 3) (1 1) (2 2) (3 5) (4 4))
+    '((0 . 3) (1 . 1) (2 . 2) (3 . 5) (4 . 4))
     (concat error-prelude "error: enumerate test(s) failed"))
   (assert-equal
     (partition 'odd? '(8 1 2 0 3 5 4 6))
@@ -226,6 +226,13 @@
       cnt)
     3
     (concat error-prelude "error: do test(s) failed")))
+
+
+(defun cora-test-for (error-prelude)
+  (assert-equal
+    (for a '(1 2 3) (* a a))
+    '(1 4 9)
+    (concat error-prelude "error: for test(s) failed")))
 
 
 (defun cora-test-equality (error-prelude)
@@ -278,6 +285,7 @@
   'cora-test-enumerate-partition
   'cora-test-tally
   'cora-test-do
+  'cora-test-for
   'cora-test-equality)
 
 
