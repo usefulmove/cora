@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 16, 2023
-;; Version: 0.2.25
+;; Version: 0.2.26
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -230,8 +230,15 @@
 
 (defun cora-test-for (error-prelude)
   (assert-equal
-    (for a '(1 2 3) (* a a))
-    '(1 4 9)
+    (for a (range (inc 8)) (* a a a))
+    '(0 1 8 27 64 125 216 343 512)
+    (concat error-prelude "error: for test(s) failed"))
+  (assert-equal
+    (for pair (enumerate '(3 1 2))
+      (let ((i (car pair))
+            (a (cdr pair)))
+        (* i (* a a))))
+    '(0 1 8)
     (concat error-prelude "error: for test(s) failed")))
 
 
