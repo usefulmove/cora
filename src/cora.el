@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 16, 2023
-;; Version: 0.2.27
+;; Modified: September 17, 2023
+;; Version: 0.2.28
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -112,12 +112,16 @@ permutations to generate list of mapped results."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; functions
 
-;; fold :: (U -> T -> U) -> U -> [T] -> U
-(defun fold (f acc lst)
+;; foldl :: (U -> T -> U) -> U -> [T] -> U
+(defun foldl (f acc lst)
   "Fold (reduce) list (LST) using applied function F starting with initial value
   ACC for the accumulator."
   (cond ((null lst) acc)
-        (t (fold f (funcall f acc (car lst)) (cdr lst)))))
+        (t (foldl f (funcall f acc (car lst)) (cdr lst)))))
+
+
+;; fold :: (U -> T -> U) -> U -> [T] -> U
+(fset 'fold 'foldl)
 
 
 ;; partial :: (... -> T -> U) -> [...] -> (T -> U)
@@ -328,7 +332,7 @@ the element index (0-based) and the element itself."
 value is a list of lists with the first element is the list of elements for
 which F returns t (true), and the second element is the list of elements for
 which F returns nil (false)."
-  (fold
+  (foldl
     (lambda (acc e)
       (if (call f e)
           (list (cons e (car acc)) ; match - add to first element of accumulator
@@ -366,7 +370,7 @@ key-count pairs."
 (defun join (lst &optional sep)
   "Concatenate the list of strings (LST) into one using the provided
 separator (SEP)."
-  (fold
+  (foldl
     (lambda (acc s)
       (concat acc sep s))
     (car lst)
