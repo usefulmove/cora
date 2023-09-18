@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 17, 2023
-;; Version: 0.2.29
+;; Modified: September 18, 2023
+;; Version: 0.2.30
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -390,9 +390,9 @@ separator (SEP)."
     (cdr lst)))
 
 
-;; cache :: (T -> U) -> (T -> U)
-(defun cache (f)
-  "Return a cached (memoized) version of the provided unary function (F)."
+;; memoize :: (T -> U) -> (T -> U)
+(defun memoize (f)
+  "Return a memoized version of the provided unary function (F)."
   (let ((hmap (make-hash-table :test 'equal)))
     (lambda (a)
       (let ((cached-value (gethash a hmap :none)))

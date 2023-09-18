@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 17, 2023
-;; Version: 0.2.30
+;; Modified: September 18, 2023
+;; Version: 0.2.31
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -21,9 +21,7 @@
 ;;
 ;;; Code:
 
-; load Cora language
-(add-to-list 'load-path "~/repos/cora/src/")
-(require 'cora)
+(load-file "~/repos/cora/src/cora.el") ; load Cora language
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -35,7 +33,7 @@
                                   (range (inc 8)))))))
     (error (concat error-prelude "error: compound test(s) failed")))
   (assert-equal
-    (call (cache 'inc) 8)
+    (call (memoize 'inc) 8)
     9
     (error (concat error-prelude "error: compound test(s) failed")))
   (assert-equal
