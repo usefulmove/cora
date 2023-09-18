@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 17, 2023
-;; Version: 0.2.29
+;; Version: 0.2.30
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -269,6 +269,17 @@
     (concat error-prelude "error: equality test(s) failed")))
 
 
+(defun cora-test-chars (error-prelude)
+  (assert-equal
+    (char-to-int ?8)
+    8
+    (concat error-prelude "error: equality test(s) failed"))
+  (assert-equal
+    (char-to-ord ?8)
+    56
+    (concat error-prelude "error: equality test(s) failed")))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run unit tests
 
@@ -299,7 +310,8 @@
   'cora-test-tally
   'cora-test-do
   'cora-test-for-comprehension
-  'cora-test-equality)
+  'cora-test-equality
+  'cora-test-chars)
 
 
 

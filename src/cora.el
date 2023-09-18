@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 17, 2023
-;; Version: 0.2.28
+;; Version: 0.2.29
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -260,6 +260,19 @@ list (LST) returns true."
 (defun join-chars (chars)
   "Join the elements of list of characters (CHARS) into a string."
   (apply 'string chars))
+
+
+;; char-to-int :: char -> integer
+(defun char-to-int (c)
+  "Convert numeric character (C) to its numeric equivalent. Return -1 if
+character does not represent an integer value."
+  (if (member c '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9)) (- c ?0) -1))
+
+
+;; char-to-ord :: char -> integer
+(defun char-to-ord (c)
+  "Convert character (C) to its ordinal value."
+  c)
 
 
 ;; gcd :: int -> int -> ... -> int (n-ary)
