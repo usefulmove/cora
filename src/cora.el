@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 18, 2023
-;; Version: 0.2.30
+;; Modified: September 22, 2023
+;; Version: 0.2.31
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -175,9 +175,12 @@ of function application is reversed from the compose function."
                   (car args)))
         (to (if (= 1 (length args))
                 (car args)
-                (cadr args))))
-    (cond ((= from to) '())
-          (t (cons from (range (inc from) to))))))
+                (cadr args)))
+        (step (if (= 3 (length args))
+                  (caddr args)
+                  1)))
+    (cond ((>= from to) '())
+          (t (cons from (range (+ step from) to step))))))
 
 
 ;; inc :: number -> number
