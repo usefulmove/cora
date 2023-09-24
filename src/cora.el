@@ -5,7 +5,7 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 22, 2023
+;; Modified: September 24, 2023
 ;; Version: 0.2.31
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
@@ -102,11 +102,11 @@ permutations to generate list of mapped results."
   (let ((current-binding (car bindings))
         (remaining-bindings (cdr bindings)))
     (if (null remaining-bindings)
-        `(mapcar (lambda ,(list (car current-binding)) ,@body) ,(cadr current-binding))
-        `(cl-mapcan
-          (lambda ,(list (car current-binding))
-            (for-comp ,remaining-bindings ,@body))
-          ,(cadr current-binding)))))
+      `(mapcar (lambda ,(list (car current-binding)) ,@body) ,(cadr current-binding))
+      `(cl-mapcan
+        (lambda ,(list (car current-binding))
+          (for-comp ,remaining-bindings ,@body))
+        ,(cadr current-binding)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -171,14 +171,14 @@ of function application is reversed from the compose function."
 (defun range (&rest args)
   "Generate a list of values from FROM (inclusive) to TO (non-inclusive)."
   (let ((from (if (= 1 (length args))
-                  0
-                  (car args)))
+                0
+                (car args)))
         (to (if (= 1 (length args))
-                (car args)
-                (cadr args)))
+              (car args)
+              (cadr args)))
         (step (if (= 3 (length args))
-                  (caddr args)
-                  1)))
+                (caddr args)
+                1)))
     (cond ((>= from to) '())
           (t (cons from (range (+ step from) to step))))))
 
@@ -269,7 +269,9 @@ list (LST) returns true."
 (defun char-to-int (c)
   "Convert numeric character (C) to its numeric equivalent. Return -1 if
 character does not represent an integer value."
-  (if (member c '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9)) (- c ?0) -1))
+  (if (member c '(?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+    (- c ?0)
+    -1))
 
 
 ;; char-to-ord :: char -> integer
@@ -351,10 +353,10 @@ which F returns nil (false)."
   (foldl
     (lambda (acc e)
       (if (call f e)
-          (list (cons e (car acc)) ; match - add to first element of accumulator
-                (cadr acc))
-          (list (car acc)
-                (cons e (cadr acc))))) ; no match - added to second element of accumulator
+        (list (cons e (car acc)) ; match - add to first element of accumulator
+              (cadr acc))
+        (list (car acc)
+              (cons e (cadr acc))))) ; no match - added to second element of accumulator
     '(() ())
     lst))
 
@@ -363,16 +365,18 @@ which F returns nil (false)."
 (defun tally (lst &optional map)
   "Count elements in list (LST) and return an association list with
 key-count pairs."
-  (setq counts-hash (if map map
-                   (make-hash-table :test 'equal)))
+  (setq counts-hash (if map
+                      map
+                      (make-hash-table :test 'equal)))
 
-  (if (null lst) counts-hash
-      (do
-        (puthash ; add first element to table
-          (car lst)
-          (+ 1 (gethash (car lst) counts-hash 0))
-          counts-hash)
-        (tally (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
+  (if (null lst)
+    counts-hash
+    (do
+      (puthash ; add first element to table
+        (car lst)
+        (+ 1 (gethash (car lst) counts-hash 0))
+        counts-hash)
+      (tally (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
 
   (let (counts '())
     (maphash ; convert hash table to association list
@@ -400,9 +404,9 @@ separator (SEP)."
     (lambda (a)
       (let ((cached-value (gethash a hmap :none)))
         (if (not-equal? :none cached-value) cached-value
-            (let ((return (call f a)))
-              (puthash a return hmap)
-              return))))))
+          (let ((return (call f a)))
+            (puthash a return hmap)
+            return))))))
 
 
 
