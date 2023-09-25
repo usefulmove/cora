@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 24, 2023
-;; Version: 0.2.31
+;; Version: 0.2.32
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -181,6 +181,13 @@ of function application is reversed from the compose function."
                 1)))
     (cond ((>= from to) '())
           (t (cons from (range (+ step from) to step))))))
+
+
+;; for-each :: (T -> ?) -> [T] -> nil (IMPURE)
+(defun for-each (f lst)
+  (unless (null lst)
+    (funcall f (car lst))
+    (for-each f (cdr lst))))
 
 
 ;; inc :: number -> number

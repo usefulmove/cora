@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 22, 2023
-;; Version: 0.2.32
+;; Modified: September 24, 2023
+;; Version: 0.2.33
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -281,6 +281,17 @@
     56
     (concat error-prelude "error: equality test(s) failed")))
 
+(defun cora-test-impure (error-prelude)
+  (let ((n 0))
+    (for-each
+      (lambda (a)
+        (setq n (+ n (* a a))))
+      '(3 1 2 0 5 4))
+    (assert-equal
+      n
+      55
+      (concat error-prelude "error: impure test(s) failed"))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; run unit tests
@@ -313,7 +324,8 @@
   'cora-test-do
   'cora-test-for-comprehension
   'cora-test-equality
-  'cora-test-chars)
+  'cora-test-chars
+  'cora-test-impure)
 
 
 
