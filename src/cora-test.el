@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
 ;; Modified: September 24, 2023
-;; Version: 0.2.33
+;; Version: 0.2.34
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -299,7 +299,7 @@
 (defun cora-test-run-tests (&rest tests)
   (letrec ((prelude "cora-test ... ")
            (execute-tests (lambda (fns)
-                            (cond ((null fns) nil)
+                            (cond ((null? fns) nil)
                                   (t (call (car fns) prelude)
                                      (call execute-tests (cdr fns)))))))
     (message (concat prelude "running tests..."))

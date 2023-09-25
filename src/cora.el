@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 24, 2023
-;; Version: 0.2.32
+;; Version: 0.2.33
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -56,6 +56,12 @@
 (defmacro not-eq? (a b)
   "Test that objects A and B are not the same object."
   `(not (eq ,a ,b)))
+
+
+;; null? :: T -> boolean
+(defmacro null? (a)
+  "Test that object A is not null."
+  `(null ,a))
 
 
 ;; call
@@ -185,6 +191,7 @@ of function application is reversed from the compose function."
 
 ;; for-each :: (T -> ?) -> [T] -> nil (IMPURE)
 (defun for-each (f lst)
+  "Execute function F on each of the elements of list (LST)."
   (unless (null lst)
     (funcall f (car lst))
     (for-each f (cdr lst))))
