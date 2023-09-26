@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 24, 2023
-;; Version: 0.2.33
+;; Modified: September 26, 2023
+;; Version: 0.2.34
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -392,7 +392,7 @@ key-count pairs."
         counts-hash)
       (tally (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
 
-  (let (counts '())
+  (let ((counts '()))
     (maphash ; convert hash table to association list
       (lambda (key value)
         (setq counts (cons (cons key value) counts)))
@@ -421,6 +421,25 @@ separator (SEP)."
           (let ((return (call f a)))
             (puthash a return hmap)
             return))))))
+
+
+;; list-ref :: [[T]] -> integer -> ... -> T
+(defun list-ref (nested-lst &rest inds)
+  "Get item in the nested list (NESTED-LST) referenced by the
+specified indicies (INDS)."
+  (letrec ((list-ref-base (lambda (lst ind)
+                            (if (= 0 ind)
+                              (car lst)
+                              (list-ref (cdr lst) (- ind 1))))))
+    (cond ((= 0 (length inds)) nil)
+          ((= 1 (length inds)) (funcall list-ref-base
+                                 nested-lst
+                                 (car inds)))
+          (t (apply 'list-ref
+               (funcall list-ref-base
+                 nested-lst
+                 (car inds))
+               (cdr inds))))))
 
 
 

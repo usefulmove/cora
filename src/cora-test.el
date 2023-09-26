@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 24, 2023
-;; Version: 0.2.34
+;; Modified: September 26, 2023
+;; Version: 0.2.35
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -291,6 +291,23 @@
       n
       55
       (concat error-prelude "error: impure test(s) failed"))))
+
+
+(defun cora-test-list-ref (error-prelude)
+  (assert-equal
+    (list-ref '(3 1 2 0 5) 2)
+    2
+    (concat error-prelude "error: list-ref test(s) failed"))
+  (assert-equal
+    (list-ref '((8 1 2)
+                 (0 5 4)) 1 2)
+    4
+    (concat error-prelude "error: list-ref test(s) failed"))
+  (assert-equal
+    (list-ref '(8 1 2) 0)
+    8
+    (concat error-prelude "error: list-ref test(s) failed")))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
