@@ -6,7 +6,7 @@
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
 ;; Modified: September 26, 2023
-;; Version: 0.2.34
+;; Version: 0.2.35
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -382,7 +382,6 @@ key-count pairs."
   (setq counts-hash (if map
                       map
                       (make-hash-table :test 'equal)))
-
   (if (null lst)
     counts-hash
     (do
@@ -391,13 +390,12 @@ key-count pairs."
         (+ 1 (gethash (car lst) counts-hash 0))
         counts-hash)
       (tally (cdr lst) counts-hash))) ; recursively run on rest of list (tail recursion)
-
   (let ((counts '()))
     (maphash ; convert hash table to association list
       (lambda (key value)
         (setq counts (cons (cons key value) counts)))
       counts-hash)
-    counts))
+    (reverse counts)))
 
 
 ;; join :: [string] -> (optional) string -> string
