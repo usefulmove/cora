@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 26, 2023
-;; Version: 0.2.35
+;; Modified: September 27, 2023
+;; Version: 0.2.36
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -438,6 +438,13 @@ specified indicies (INDS)."
                  nested-lst
                  (car inds))
                (cdr inds))))))
+
+
+;; remove-duplicates :: [T] -> [T]
+(defun remove-duplicates (lst)
+  "Remove duplicates from list (LST)."
+  (let ((counts (tally lst)))
+    (map 'car counts)))
 
 
 

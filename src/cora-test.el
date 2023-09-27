@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 26, 2023
-;; Version: 0.2.35
+;; Modified: September 27, 2023
+;; Version: 0.2.36
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -83,7 +83,11 @@
 
 (defun cora-test-compound3 (error-prelude)
   (when (any? 'even? '(3 1 5 9 7))
-    (error (concat error-prelude "error: compound3 test(s) failed"))))
+    (error (concat error-prelude "error: compound3 test(s) failed")))
+  (assert-equal
+    (remove-duplicates '(8 1 2 8 5 4 0 8))
+    '(8 1 2 5 4 0)
+    (concat error-prelude "error: compound3 test(s) failed")))
 
 
 (defun cora-test-function-composition (error-prelude)
