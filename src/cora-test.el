@@ -83,7 +83,11 @@
 
 (defun cora-test-compound3 (error-prelude)
   (when (any? 'even? '(3 1 5 9 7))
-    (error (concat error-prelude "error: compound3 test(s) failed"))))
+    (error (concat error-prelude "error: compound3 test(s) failed")))
+  (assert-equal
+    (remove-duplicates '(8 1 2 8 5 4 0 8))
+    '(8 1 2 5 4 0)
+    (concat error-prelude "error: compound3 test(s) failed")))
 
 
 (defun cora-test-function-composition (error-prelude)

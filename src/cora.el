@@ -453,6 +453,13 @@ specified indicies (INDS)."
                (cdr inds))))))
 
 
+;; remove-duplicates :: [T] -> [T]
+(defun remove-duplicates (lst)
+  "Remove duplicates from list (LST)."
+  (let ((counts (tally lst)))
+    (map 'car counts)))
+
+
 
 (provide 'cora)
 ;;; cora.el ends here
