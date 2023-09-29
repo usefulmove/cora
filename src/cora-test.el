@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 30, 2023
-;; Modified: September 26, 2023
-;; Version: 0.2.35
+;; Modified: September 28, 2023
+;; Version: 0.2.36
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -287,6 +287,13 @@
       (lambda (a)
         (setq n (+ n (* a a))))
       '(3 1 2 0 5 4))
+    (assert-equal
+      n
+      55
+      (concat error-prelude "error: impure test(s) failed")))
+  (let ((n 0))
+    (for ((a '(3 1 2 0 5 4)))
+      (setq n (+ n (* a a))))
     (assert-equal
       n
       55

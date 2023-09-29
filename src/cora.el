@@ -5,8 +5,8 @@
 ;; Author: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Maintainer: Duane Edmonds <duane.edmonds@gmail.com>
 ;; Created: August 23, 2023
-;; Modified: September 26, 2023
-;; Version: 0.2.35
+;; Modified: September 28, 2023
+;; Version: 0.2.36
 ;; Keywords: language extensions internal lisp tools emacs
 ;; Homepage: https://github.com/usefulmove/cora
 ;; Package-Requires: ((emacs "25.1"))
@@ -113,6 +113,19 @@ permutations to generate list of mapped results."
         (lambda ,(list (car current-binding))
           (for-comp ,remaining-bindings ,@body))
         ,(cadr current-binding)))))
+
+
+;; for
+(defmacro for (bindings &rest body)
+  "Execute BODY for every permutation of BINDINGS."
+  (let ((current-binding (car bindings))
+        (remaining-bindings (cdr bindings)))
+    (if (null remaining-bindings)
+        `(dolist (,(car current-binding) ,(cadr current-binding))
+           ,@body)
+      `(dolist (,(car current-binding) ,(cadr current-binding))
+         (for ,remaining-bindings ,@body)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
